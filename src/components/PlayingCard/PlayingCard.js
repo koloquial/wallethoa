@@ -1,6 +1,6 @@
 import './style.css';
 
-const Card = ({ card }) => {
+const PlayingCard = ({ card }) => {
 
     const formatQuote = (quote) =>{
         return <>{quote.split('%')[0]}<br />{quote.split('%')[1]}</>;
@@ -71,4 +71,4 @@ const Card = ({ card }) => {
     )
 }
 
-export default Card;
+export default PlayingCard;

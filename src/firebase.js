@@ -10,7 +10,7 @@ const firebaseConfig = {
     appId: process.env.REACT_APP_FIREBASE_APP_ID,
 }
 
-const fire_app = firebase.initializeApp(firebaseConfig);
+const fire = firebase.initializeApp(firebaseConfig);
 
-export const auth = fire_app.auth();
-export default fire_app;
+export const auth = fire.auth();
+export default fire;

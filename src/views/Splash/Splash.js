@@ -11,7 +11,7 @@ const Splash = () => {
         <Container className='d-flex align-items-center justify-content-center' style={{minHeight: '100vh'}}>
             <Row>
                 <Col lg={12}>
-                    <h1>Fabric</h1>
+                    <h1>Wallet HOA</h1>
                 </Col>
                 <Col lg={12}>
                     {active === 'login' ? 

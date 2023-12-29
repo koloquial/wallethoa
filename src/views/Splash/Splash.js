@@ -5,13 +5,17 @@ import SignUp from "../../components/SignUp";
 import Login from '../../components/Login';
 
 const Splash = () => {
-    const [active, setActive] = useState('signup');
+    const [active, setActive] = useState('login');
 
     return (
-        <Container className='d-flex align-items-center justify-content-center' style={{minHeight: '100vh'}}>
+        <Container 
+        className='d-flex align-items-center justify-content-center splash' 
+        style={{minHeight: '100vh'}}
+        fluid>
             <Row>
                 <Col lg={12}>
-                    <h1>Wallet HOA</h1>
+                    <span className='title'>Wallet</span> <span className='title-alt'>HOA</span>
+                    <p>A simple solution to record income and expenses, generate reports, and manage home owners.</p>
                 </Col>
                 <Col lg={12}>
                     {active === 'login' ? 

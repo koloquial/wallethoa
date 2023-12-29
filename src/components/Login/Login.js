@@ -30,8 +30,10 @@ const Login = ({ setActive }) => {
 
     return (
         <Card>
-            <Card.Body>
+            <Card.Header>
                 <p>Login</p>
+            </Card.Header>
+            <Card.Body>
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Form onSubmit={handleSubmit}>
                     <Form.Group id='email'>

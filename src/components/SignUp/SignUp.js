@@ -43,8 +43,10 @@ const SignUp = ({ setActive }) => {
 
     return (
         <Card>
-            <Card.Body>
+            <Card.Header>
                 <p>Sign Up</p>
+            </Card.Header>
+            <Card.Body>
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Form onSubmit={handleSubmit}>
                     <Form.Group id='email'>

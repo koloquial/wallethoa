@@ -1,0 +1,10 @@
+@import url('./palette.css');
+@import url('./fonts.css');
+@import url('./containers.css');
+@import url('./buttons.css');
+@import url('./inputs.css');
+@import url('./links.css');
+
+body{
+    background-color: var(--white);
+}

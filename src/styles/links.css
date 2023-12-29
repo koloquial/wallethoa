@@ -1,0 +1,19 @@
+a:not([href]):not([class]){
+    color: var(--alt);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+a:not([href]):not([class]):hover{
+    color: var(--white);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.nav-link{
+    color: var(--alt);
+}
+
+.nav-link:hover{
+    color: var(--white);
+}

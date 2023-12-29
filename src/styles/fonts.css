@@ -1,0 +1,33 @@
+.splash{
+    color: var(--white);
+    background-color: var(--primary);
+    background-image:
+    linear-gradient(60deg, rgba(0,0,0,.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.1) 75%, rgba(0,0,0,.1)),
+    linear-gradient(120deg, rgba(0,0,0,.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.1) 75%, rgba(0,0,0,.1));
+    background-size: 490px 490px;
+}
+
+.title{
+    font-family: 'Italianno', cursive;
+    font-size: 70px;
+    margin: 0px 0px 0px 0px;
+    cursor: default;
+}
+
+.title-alt{
+    color: var(--secondary);
+    cursor: default;
+    margin: 0px 0px 0px 0px;
+}
+
+h1, h2, h3, h4, h5, h6, p{
+    cursor: default;
+}
+
+span{
+    margin: 0px 0px 0px 0px;
+}
+
+.navbar-brand{
+    color: var(--white);
+}

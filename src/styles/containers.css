@@ -24,3 +24,10 @@
 .navbar-toggler{
     background-color: var(--secondary);
 }
+
+.active-sheet{
+    background-color: var(--secondary);
+    color: var(--white);
+    margin: 0;
+    padding: 0px 0px 0px 10px;
+}

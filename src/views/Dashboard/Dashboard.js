@@ -1,69 +1,99 @@
-import { Button } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 
 import Navigation from '../../components/Navigation';
 import Loading from '../../components/Loading';
-import CreateHOA from '../../components/CreateHOA'
+import CreateHOA from '../../components/CreateHOA';
+import CreateSheet from '../../components/CreateSheet';
+import ActiveSheet from '../../components/ActiveSheet';
 
 const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const { currentUser, logout } = useAuth();
-    const [userData, setUserData] = useState();
+    const [account, setAccount] = useState();
+    const [activeSheet, setActiveSheet] = useState();
     const navigate = useNavigate();
 
     useEffect(() => {
+        console.log('current user uid:', currentUser.uid)
         if(currentUser){
-            getUser();
+            getUserAccount()
         }
     }, [])
 
-    const createNewUser = () => {
-        fetch(`${process.env.MONGODB_URI}/users/add`, {
-            method: 'POST',
-            body: JSON.stringify({
-              uid: currentUser.uid
-            }),
-            headers: {
-              "Content-type": "application/json; charset=UTF-8"
-            }
-          })
-         .then(res => res.json())
-         .then(json => {
-             setUserData(json);
-             setLoading(false);
-        });
-    }
-
-    const getUser = () => {
-        fetch(`${process.env.MONGODB_URI}/users/${currentUser.uid}`)
-        .then(res => res.json())
+    function getUserAccount(){
+        fetch(`http://localhost:5000/users/${currentUser.uid}`)
+        .then(res => res.json(res))
         .then(json => {
-            if(json === null){
-                createNewUser()
+            console.log('get user:', json)
+            if(Object.keys(json).length === 0){
+                createUserAccount();
             }else{
-                setUserData(json);
+                console.log('set account', json)
+                setAccount(json);
+                setActiveSheet(json.sheets[json.sheets.length - 1])
                 setLoading(false);
             }
         })
+        .catch(err => console.log('err', err))
+    }
+
+    function createUserAccount(){
+        fetch(`http://localhost:5000/users/add-account`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+              },
+            body: JSON.stringify({
+                uid: currentUser.uid,
+                admin: currentUser.email
+            })
+        })
+        .then(res => res.json())
+        .then(json => {
+            console.log('set account', json)
+            setAccount(json);
+            setLoading(false);
+        })
+        .catch(err => console.log('err', err))
     }
 
     return (
         <>
-        {loading ? <Loading /> : <>
+            {loading ? <Loading /> : 
+                <>
+                    <Navigation />
+                    {activeSheet ? 
+                        <ActiveSheet 
+                            account={account}
+                            sheet={activeSheet}
+                            setActiveSheet={setActiveSheet}
+                            /> : <></>}
 
-        {!userData.hoaName ? <CreateHOA uid={currentUser.uid} /> : <></>}
+                        <Container>
+                            {!account.hoaName ? 
+                                <CreateHOA 
+                                    uid={currentUser.uid}
+                                    setAccount={setAccount} 
+                                /> : <></>}
+                            
+                            {account.hoaName && !account.sheets.length ? 
+                                <CreateSheet
+                                    uid={currentUser.uid}
+                                    setAccount={setAccount}
+                                    setActiveSheet={setActiveSheet}
+                                /> : <></>}
 
-            <Navigation />
-            <p>Dashboard</p>
-            <p><b>Email:</b> {currentUser && currentUser.email}</p>
-            <Link to='/update-profile'>Update Profile</Link>
-
-        </>
-        }
-            
+                            {activeSheet ? 
+                                <>
+                                    Starting Balance: $ {Number(activeSheet.startingBalance).toFixed(2)}
+                                </> : <></>}
+                        </Container>
+                </>
+            }
         </>
     )
 }

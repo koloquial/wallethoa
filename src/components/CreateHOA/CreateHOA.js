@@ -1,19 +1,18 @@
 import { useState, useRef } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Card, Form, Button } from 'react-bootstrap';
 
 import Loading from '../Loading';
 
-const CreateHOA = ({ uid }) => {
+const CreateHOA = ({ uid, setAccount }) => {
     const [loading, setLoading] = useState(false);
     const hoaName = useRef();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setLoading(true);
-
+       
         //update hoa name
-        fetch(`${process.env.MONGODB_URI}/users/update`, {
-            method: 'UPDATE',
+        fetch(`http://localhost:5000/users/update/hoa-name`, {
+            method: 'POST',
             body: JSON.stringify({
               uid: uid,
               hoaName: hoaName.current.value
@@ -23,24 +22,27 @@ const CreateHOA = ({ uid }) => {
             }
           })
          .then(res => res.json())
-         .then(json => {
-             console.log(json)
-             setLoading(false);
-        });
+         .then(json => setAccount(json));
     }
 
     return (
         <>
-            {loading ? <Loading /> : <>
-                <p>Create new HOA</p>
-                <Form onSubmit={handleSubmit}>
-                    <Form.Group id='hoa-name'>
-                        <Form.Label>HOA Name</Form.Label>
-                        <Form.Control type='text' ref={hoaName} required />
-                    </Form.Group>
-                </Form>
-                <Button disabled={loading} type='submit'>Submit</Button>
-            </>}
+            {loading ? <Loading /> : 
+                <Card>
+                    <Card.Header>
+                        <p>Create New HOA</p>
+                    </Card.Header>
+                    <Card.Body>
+                        <Form onSubmit={handleSubmit}>
+                        <Form.Group id='hoa-name'>
+                            <Form.Label>HOA Name</Form.Label>
+                            <Form.Control type='text' ref={hoaName} required />
+                        </Form.Group>
+                        <Button disabled={loading} type='submit'>Submit</Button>
+                        </Form>
+                    </Card.Body>
+                </Card>
+            }
         </>
     )
 }

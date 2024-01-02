@@ -4,6 +4,7 @@
 @import url('./buttons.css');
 @import url('./inputs.css');
 @import url('./links.css');
+@import url('./loading.css');
 
 body{
     background-color: var(--white);

@@ -5,7 +5,15 @@
 @import url('./inputs.css');
 @import url('./links.css');
 @import url('./loading.css');
+@import url('./tables.css');
 
 body{
     background-color: var(--white);
 }
+
+ul.no-bullets{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+

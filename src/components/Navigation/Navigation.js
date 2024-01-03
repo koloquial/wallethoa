@@ -25,14 +25,15 @@ function Navigation() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Link</Nav.Link>
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+            <Nav.Link href="/">Dashboard</Nav.Link>
+            <Nav.Link href="/income">Income</Nav.Link>
+            <Nav.Link href="/expenses">Expenses</Nav.Link>
+            <Nav.Link href="/home-owners">Home Owners</Nav.Link>
+            <Nav.Link href="/board-members">Board Members</Nav.Link>
+            <Nav.Link href="/balance-sheets">Balance Sheets</Nav.Link>
+            <NavDropdown title="Profile" id="profile-dropdown">
+              <NavDropdown.Item href="/update-profile">Update Profile Information</NavDropdown.Item>
+              <NavDropdown.Item href="/update-profile">Download Account Information</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={handleLogout}>
                 Logout

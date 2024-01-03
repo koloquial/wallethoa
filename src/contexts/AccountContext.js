@@ -10,8 +10,9 @@ export const AccountProvider = ({ children }) => {
     const [account, setAccount] = useState();
     const [active, setActive] = useState();
     
-    const func = (arg1, arg2) => {
-        console.log('a function');
+    const clearState = () => {
+        setAccount();
+        setActive();
     }
 
     const value = {
@@ -19,7 +20,7 @@ export const AccountProvider = ({ children }) => {
         setAccount,
         active,
         setActive,
-        func
+        clearState
     }
 
     return (

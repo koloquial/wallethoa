@@ -9,9 +9,9 @@ import { AccountProvider } from './contexts/AccountContext';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
+  <AccountProvider>
     <AuthProvider>
-      <AccountProvider>
         <App />
-      </AccountProvider>
     </AuthProvider>
+    </AccountProvider>
 );

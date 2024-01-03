@@ -2,9 +2,6 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from 'react-chartjs-2';
 
 const ChartGraph = ({ dataset }) => {
-
-    console.log('data', dataset)
-
     ChartJS.register(ArcElement, Tooltip, Legend);
 
     let _labels = [];

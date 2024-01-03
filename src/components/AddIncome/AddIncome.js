@@ -8,7 +8,7 @@ import { Card, Form, Button, Row, Col, InputGroup, Dropdown, Alert } from 'react
 import { Link } from 'react-router-dom';
 
 //components
-import PopUp from '../Popup';
+import Popup from '../Popup';
 import AddIncomeType from '../AddIncomeType';
 
 //requests
@@ -37,18 +37,18 @@ const AddIncome = ({ quick }) => {
         setDatePick(new Date());
     }
 
-    const getActive = (sheet) => {
-        console.log('sheet', sheet)
-        for(let i = 0; i < account.sheets.length; i++){
-            if(account.sheets[i].name === sheet.name){
-                return account.sheets[i];
+    const getActive = (json) => {
+        for(let i = 0; i < json.sheets.length; i++){
+            if(json.sheets[i].name === active.name){
+                setActive(json.sheets[i]);
+                break;
             }
         }
     }
 
     return (
         <Card>
-            <PopUp 
+            <Popup 
                 showModal={showModal} 
                 setShowModal={setShowModal}
                 header="Create/Edit Income Type"
@@ -56,7 +56,7 @@ const AddIncome = ({ quick }) => {
              />
             <Card.Header>
                 <Row>
-                    <Col><p>Add Income</p></Col>
+                    <Col><p>Add Deposit</p></Col>
                     <Col style={{textAlign: 'right', paddingRight: '25px'}}>
                         {quick ? <Link to='/income'>View Income</Link> : <></>}
                     </Col>
@@ -73,7 +73,7 @@ const AddIncome = ({ quick }) => {
                     addDeposit(account.uid, active, datePick, type, noteRef.current.value, amountRef.current.value)
                     .then(json => {
                         setAccount(json);
-                        setActive(getActive(json))
+                        getActive(json)
                     })
                     .then(() => clearForm('Deposit added.'))
                 }}>

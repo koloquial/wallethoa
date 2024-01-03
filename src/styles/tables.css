@@ -10,13 +10,13 @@ th{
 }
 
 tr:nth-child(even) {
-    background-color: rgba(0, 0, 0, .5) !important;
-    color: var(--white);
+    background-color: rgba(91, 131, 101, 0.5) !important;
+    color: black;
 }
 
 tr:nth-child(odd) {
-    background-color: rgba(0, 0, 0, .8) !important;
-    color: var(--white);
+    background-color: rgba(135, 192, 149, 0.5) !important;
+    color: black;
 }
 
 td{

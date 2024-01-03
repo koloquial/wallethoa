@@ -1,5 +1,5 @@
 export const addExpense = async (uid, sheet, datePick, type, payee, note, amount) => {
-    fetch(`http://localhost:5000/users/add/expense-slip`, {
+    return await fetch(`http://localhost:5000/users/add/expense`, {
         method: 'POST',
         body: JSON.stringify({
             uid: uid,

@@ -13,12 +13,20 @@ import Navigation from '../../components/Navigation';
 import ActiveSheet from '../../components/ActiveSheet';
 import ChartGraph from '../../components/ChartGraph'
 
-//icons
-import { GrView } from "react-icons/gr";
+//requests
+import { assignAccounts } from '../../requests/assignAccounts';
+import Deposits from '../../components/Deposits';
+import Overview from '../../components/Overview';
+
+//functions
+import getIncomeTotal from '../../functions/getIncomeTotal';
+import getExpenseTotal from '../../functions/getExpenseTotal';
+import AddIncome from '../../components/AddIncome';
 
 const Income = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+
     const { currentUser, logout } = useAuth();
     const { account, setAccount, active, setActive } = useAccount();
 
@@ -32,61 +40,36 @@ const Income = () => {
         return data;
     }
 
+    useEffect(() => {
+        assignAccounts(currentUser)
+        .then(json => {
+            setAccount(json);
+            setActive(json.sheets[json.sheets.length - 1])
+            setLoading(false);
+        })
+    }, [])
+
     return (
         <>
             {loading ? <Loading /> : 
                 <>
                     <Navigation />
-                    {active ? 
-                        <ActiveSheet 
-                            account={account}
-                            sheet={active}
-                            setActive={setActive}
-                            /> : <></>}
+                    {active ? <ActiveSheet /> : <></>}
                     <Container>
-                    
-                        <Card>
-                            <Card.Header>
-                                <p>Income Overview</p>
-                            </Card.Header>
-                            <Card.Body>
-                                <Row>
-                                    <Col>
-                                    <p><b>Total Income:</b></p>
-                                    </Col>
-                                    <Col xs={6} style={{textAlign: 'center'}}><ChartGraph dataset={getDataset()} /></Col>
-                                </Row>
-                            </Card.Body>
-                        </Card>
-
-                        <Card>
-                            <Card.Header>
-                                <p>Deposits</p>
-                            </Card.Header>
-                            <Card.Body>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th style={{textAlign: 'center'}}>Post Date</th>
-                                            <th style={{textAlign: 'center'}}>Amount</th>
-                                            <th style={{textAlign: 'center'}}>View/Edit</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    {active.income.map((item, index) => {
-                                        return (
-                                            <tr key={`list-${item.postDate}-${index}`}>
-                                                <td style={{textAlign: 'center'}}>{item.postDate.split('T')[0]}</td>
-                                                <td style={{textAlign: 'center'}}>${Number(item.amount).toFixed(2)}</td>
-                                                <td style={{textAlign: 'center'}}><Button size="sm" onClick={() => console.log('test')}><GrView /></Button></td>
-                                            </tr>
-                                        )
-                                    })}
-                                    </tbody>
-                                </table>
-                             
-                            </Card.Body>
-                        </Card>
+                        <Overview data={{
+                            title: "Income Overview",
+                            content: [
+                                {
+                                    label: 'Income Received', 
+                                    value: `$${getIncomeTotal(active).toFixed(2)}`
+                                },
+                            ],
+                            graph: [
+                                {label: 'Income', data: getIncomeTotal(active).toFixed(2)},
+                            ]
+                        }} />
+                        <AddIncome />
+                        <Deposits />
                     </Container>
                 </>
             }

@@ -2,96 +2,75 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAccount } from '../../contexts/AccountContext';
 
 //style
-import { Container } from 'react-bootstrap';
+import { Card, Container, Row, Col, Button } from 'react-bootstrap';
 
 //components
 import Loading from '../../components/Loading';
 import Navigation from '../../components/Navigation';
 import ActiveSheet from '../../components/ActiveSheet';
+import ChartGraph from '../../components/ChartGraph'
+
+//requests
+import { assignAccounts } from '../../requests/assignAccounts';
+import Deposits from '../../components/Deposits';
+import Overview from '../../components/Overview';
+
+//functions
+import getIncomeTotal from '../../functions/getIncomeTotal';
+import getExpenseTotal from '../../functions/getExpenseTotal';
+import AddExpense from '../../components/AddExpense';
+import ExpensesList from '../../components/ExpensesList';
 
 const Expenses = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [account, setAccount] = useState();
-    const [activeSheet, setActiveSheet] = useState();
+
     const { currentUser, logout } = useAuth();
+    const { account, setAccount, active, setActive } = useAccount();
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if(currentUser){
-            getUserAccount()
-        }
-    }, [])
-
-    useEffect(() => {
-        if(account){
-            for(let i = 0; i < account.sheets.length; i++){
-                if(account.sheets[i].name === activeSheet.name){
-                    setActiveSheet(account.sheets[i])
-                }
-            }
-        }
-       
-    }, [account])
-
-    function getUserAccount(){
-        //get user account via uid
-        fetch(`http://localhost:5000/users/${currentUser.uid}`)
-        .then(res => res.json(res))
-        .then(json => {
-            //check if response has length
-            if(Object.keys(json).length === 0){
-                //if no length, create new user account
-                createUserAccount();
-            }else{
-                //if response has length, set account
-                setAccount(json);
-                //check if any sheets on account
-                if(json.sheets.length){
-                    //set active sheet to newest in sheet array
-                    setActiveSheet(json.sheets[json.sheets.length - 1])
-                }
-                //set loading to false
-                setLoading(false);
-            }
+    const getDataset = () => {
+        let data = [];
+        active.income.forEach(item => {
+            data.push({data: Number(item.amount).toFixed(2), label: item.type})
         })
-        .catch(err => console.log('err', err))
+        return data;
     }
 
-    function createUserAccount(){
-        //create user account with admin email and uid
-        fetch(`http://localhost:5000/users/add-account`, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-              },
-            body: JSON.stringify({
-                uid: currentUser.uid,
-                admin: currentUser.email
-            })
-        })
-        .then(res => res.json())
+    useEffect(() => {
+        assignAccounts(currentUser)
         .then(json => {
-            //set active account
             setAccount(json);
-            //set loading to false
+            setActive(json.sheets[json.sheets.length - 1])
             setLoading(false);
         })
-        .catch(err => console.log('err', err))
-    }
-
-    console.log('Account', account)
+    }, [])
 
     return (
         <>
             {loading ? <Loading /> : 
                 <>
                     <Navigation />
+                    {active ? <ActiveSheet /> : <></>}
                     <Container>
-
+                        <Overview data={{
+                            title: "Expense Overview",
+                            content: [
+                                {
+                                    label: 'Expenses Paid', 
+                                    value: `$${getExpenseTotal(active).toFixed(2)}`
+                                },
+                            ],
+                            graph: [
+                                {label: 'Expense', data: getExpenseTotal(active).toFixed(2)},
+                            ]
+                        }} />
+                        <AddExpense />
+                        <ExpensesList />
                     </Container>
                 </>
             }

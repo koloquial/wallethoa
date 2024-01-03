@@ -1,5 +1,6 @@
 //state
 import { useRef, useState } from 'react'
+import { useAccount } from '../../contexts/AccountContext';
 
 //style
 import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
@@ -8,162 +9,133 @@ import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import { MdCancel } from "react-icons/md";
-import { IoIosCheckmarkCircle } from "react-icons/io"
+import { IoIosCheckmarkCircle } from "react-icons/io";
 
-const AddExpensePayee = ({ account, setAccount }) => {
+//requests
+import { deleteExpensePayee } from '../../requests/deleteExpensePayee';
+import { updateExpensePayee } from '../../requests/updateExpensePayee';
+import { addExpensePayee } from '../../requests/addExpensePayee';
+
+const AddExpensePayee = () => {
     const [loading, setLoading] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [alertMsg, setAlertMsg] = useState('');
-    const [showEditPayee, setShowEditPayee] = useState(false);
-    const [confirmDelete, setConfirmDelete] = useState('');
-    const payeeNameRef = useRef('');
+
+    //view state changes
+    const [edit, setEdit] = useState();
+    const [confirmDelete, setConfirmDelete] = useState();
+
+    //input references
+    const typeNameRef = useRef('');
     const updatedNameRef = useRef('');
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-       
-        //add expense payee
-        fetch(`http://localhost:5000/users/add/expense-payee`, {
-            method: 'POST',
-            body: JSON.stringify({
-              uid: account.uid,
-              payee: payeeNameRef.current.value
-            }),
-            headers: {
-              "Content-type": "application/json; charset=UTF-8"
-            }
-          })
-         .then(res => res.json())
-         .then(json => {
-             setAccount(json);
-             payeeNameRef.current.value = ''
-             setAlertMsg('Payee added.')
-             setShowAlert(true);
-             setTimeout(() => setShowAlert(false), 2500)
-         });
-    }
+    //state
+    const { account, setAccount, active, setActive } = useAccount();    
 
-    const handleUpdate = (e) => {
-        e.preventDefault();
-        
-        //update expense payee name
-        fetch(`http://localhost:5000/users/update/expense-payee`, {
-            method: 'POST',
-            body: JSON.stringify({
-                uid: account.uid,
-                payee: updatedNameRef.current.value,
-                index: showEditPayee.split('-')[1]
-            }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-            })
-            .then(res => res.json())
-            .then(json => {
-                setAccount(json);
-                payeeNameRef.current.value = ''
-                setAlertMsg('Payee name updated.')
-                setShowAlert(true);
-                setTimeout(() => setShowAlert(false), 2500)
-            });
-    }
-
-    const editPayee = (payee, index) => {
-        setShowEditPayee(`${payee}-${index}`);
-    }
-
-    const deleteExpensePayee = (payee, index) => {
-        //delete expense payee
-        fetch(`http://localhost:5000/users/delete/expense-payee`, {
-            method: 'POST',
-            body: JSON.stringify({
-              uid: account.uid,
-              index: index
-            }),
-            headers: {
-              "Content-type": "application/json; charset=UTF-8"
-            }
-          })
-         .then(res => res.json())
-         .then(json => {
-             setAccount(json);
-             payeeNameRef.current.value = ''
-             setAlertMsg('Payee removed.')
-             setShowAlert(true);
-             setTimeout(() => setShowAlert(false), 2500);
-             setConfirmDelete('');
-             setShowEditPayee('');
-         });
+    const clearForm = (message) => {
+         setAlertMsg(message);
+         setShowAlert(true);
+         setConfirmDelete('');
+         setEdit('');
+         typeNameRef.current.value = ''
+         setTimeout(() => setShowAlert(false), 2500);
     }
 
     return (
         <>
             {showAlert ? <Alert variant='success'>{alertMsg}</Alert> : <></>}
 
-            <Form onSubmit={handleSubmit}>
-                <Form.Group id='expense-type-name'>
+            <Form onSubmit={(e) => {
+                e.preventDefault();
+                addExpensePayee(account.uid, typeNameRef.current.value)
+                .then(json => setAccount(json))
+                .then(() => clearForm('Payee added.'))
+            }}>
+                <Form.Group id='expense-payee-name'>
                     <Form.Label>Payee Name</Form.Label>
-                    <Form.Control type='text' ref={payeeNameRef} required />
+                    <Form.Control type='text' ref={typeNameRef} required />
                 </Form.Group>
                 <Button disabled={loading} type='submit'>Submit</Button>
             </Form>
+
             <br />
+
             {account.expensePayees.length ? 
-            <>
-                <p>Available Payees:</p>
-                <ul className='no-bullets'>
-                    {account.expensePayees.map((payee, index) => {
-                        return (
-                            <li key={`list-${payee}-${index}`} className='income-type-box'>
-                                <Row>
-                                    <Col>
-                                        {showEditPayee === `${payee}-${index}` ?
+                <>
+                    <p>Available Payees:</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Payee</th>
+                                <th>View/Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {account.expensePayees.map((type, index) => {
+                            return (
+                                <tr key={`expense-payees-${type}-${index}`}>
+                                    <td>
+                                        {edit === `expense-payees-${type}-${index}` ? 
                                             <>
-                                                {confirmDelete != `${payee}-${index}` ? 
-                                                    <Form onSubmit={handleUpdate}>
+                                                {confirmDelete != `expense-payees-${type}-${index}` ?
+                                                    <Form onSubmit={(e) => {
+                                                        e.preventDefault();
+                                                        updateExpensePayee(account.uid, updatedNameRef.current.value, index)
+                                                        .then(json => setAccount(json))
+                                                        .then(() => clearForm('Payee updated.')) 
+                                                        }}>
                                                         <Form.Group>
                                                             <Form.Label>Enter New Payee Name</Form.Label>
-                                                            <Form.Control ref={updatedNameRef} type='text' placeholder={payee} required></Form.Control>
+                                                            <Form.Control ref={updatedNameRef} type='text' placeholder={type} required></Form.Control>
                                                         </Form.Group>
-
                                                         <Row>
                                                             <Col style={{textAlign: 'center'}}>
-                                                                <Button variant='danger' onClick={() => setConfirmDelete(`${payee}-${index}`)}><MdDelete /></Button>
+                                                                <Button variant='danger' onClick={() => setConfirmDelete(`expense-payees-${type}-${index}`)}><MdDelete /></Button>
                                                             </Col>
                                                             <Col style={{textAlign: 'center'}}>
-                                                                <Button variant='secondary' onClick={() => setShowEditPayee('')}><MdCancel /></Button>
+                                                                <Button variant='secondary' onClick={() => setEdit('')}><MdCancel /></Button>
                                                             </Col>
                                                             <Col style={{textAlign: 'center'}}>
-                                                                <Button type='submit' onClick={() => editPayee(payee, index)}><IoIosCheckmarkCircle /></Button>
+                                                                <Button type='submit'><IoIosCheckmarkCircle /></Button>
                                                             </Col>
                                                         </Row>
-                                                    </Form> : 
+                                                    </Form>
+                                                    : 
                                                     <>
-                                                        <p>Are you sure you want to delete <b>{payee}</b> ?</p>
-
+                                                        <p>Are you sure you want to delete <b>{type}</b> ?</p>
                                                         <Row>
                                                             <Col style={{textAlign: 'center'}}>
-                                                                <Button variant='danger' onClick={() => deleteExpensePayee(payee, index)}>Delete</Button>
+                                                                <Button 
+                                                                    variant='danger' 
+                                                                    onClick={() => {
+                                                                        deleteExpensePayee(account.uid, index)
+                                                                        .then(json => setAccount(json))
+                                                                        .then(() => clearForm('Payee deleted.'))
+                                                                    }
+                                                                    }>Delete</Button>
                                                             </Col>
                                                             <Col style={{textAlign: 'center'}}>
-                                                            <Button variant='secondary' onClick={() => setConfirmDelete('')}>Cancel</Button>
+                                                                <Button variant='secondary' onClick={() => setConfirmDelete('')}>Cancel</Button>
                                                             </Col>
                                                         </Row>
-                                                    </>}
-                                            </> : <p>{payee}</p>
+                                                    </>
+                                                }
+                                            </> 
+                                            : <p>{type}</p>
                                         }
-                                    </Col>
-                                    {showEditPayee === `${payee}-${index}` ? <></> : 
-                                    <Col style={{textAlign: 'right', paddingRight: '25px'}}>
-                                        <Button size="sm" onClick={() => editPayee(payee, index)}><CiEdit /></Button>
-                                    </Col>
-                                        }
-                                </Row>
-                            </li>
-                        )
-                    })}
-                </ul>
-            </> : <></>}
+                                    </td>
+                                    <td style={{textAlign: 'center'}}>
+                                        {edit != `expense-payees-${type}-${index}` ?
+                                            <Button size="sm" onClick={() => setEdit(`expense-payees-${type}-${index}`)}><CiEdit /></Button>
+                                            : <></>}
+                                    </td>
+                                </tr>
+                            )
+                        })}
+                        </tbody>
+                    </table>
+                </> : <></>
+            }
         </>
     )
 }

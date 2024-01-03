@@ -65,8 +65,10 @@ const AddIncomeType = () => {
                     <p>Available Types:</p>
                     <table>
                         <thead>
-                            <th>Type</th>
-                            <th>View/Edit</th>
+                            <tr>
+                                <th>Type</th>
+                                <th>View/Edit</th>
+                            </tr>
                         </thead>
                         <tbody>
                         {account.incomeTypes.map((type, index) => {

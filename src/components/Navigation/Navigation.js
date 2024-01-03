@@ -3,15 +3,18 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useAuth } from '../../contexts/AuthContext';
+import { useAccount } from '../../contexts/AccountContext';
 import { Link, useNavigate } from 'react-router-dom';
 
 function Navigation() {
   const { currentUser, logout } = useAuth();
+  const { clearState } = useAccount();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try{
-      await logout()
+      await logout();
+      clearState();
       navigate('/splash');
     }catch(e){
       console.log('failed to logout.');

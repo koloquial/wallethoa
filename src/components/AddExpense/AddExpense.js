@@ -1,14 +1,13 @@
 //state
 import { useState, useRef } from 'react'
-import { Link } from 'react-router-dom';
+import SelectDate from '../SelectDate';
 import { useAccount } from '../../contexts/AccountContext';
-import { useAuth } from '../../contexts/AuthContext';
 
 //style
-import { Card, Form, Button, Row, Col, InputGroup, Dropdown, DropdownButton } from 'react-bootstrap';
+import { Card, Form, Button, Row, Col, InputGroup, Dropdown, Alert } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 //components
-import SelectDate from '../SelectDate';
 import Popup from '../Popup';
 import AddExpenseType from '../AddExpenseType';
 import AddExpensePayee from '../AddExpensePayee';
@@ -17,25 +16,37 @@ import AddExpensePayee from '../AddExpensePayee';
 import { addExpense } from '../../requests/addExpense';
 
 const AddExpense = ({ quick }) => {
-    const [datePick, setDatePick] = useState(new Date())
-    const [popupType, setPopupType] = useState();
-    const [showModal, setShowModal] = useState(false);
-
     //inputs
     const amountRef = useRef();
     const noteRef = useRef('');
     const [type, setType] = useState('');
     const [payee, setPayee] = useState('');
+    const [datePick, setDatePick] = useState(new Date());
+    const [popupType, setPopupType] = useState('');
 
     //state
     const { account, setAccount, active, setActive } = useAccount();
-    const { currentUser } = useAuth();
+    const [showModal, setShowModal] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMsg, setAlertMsg] = useState('');
 
-    const clearForm = (message) => {
+    const clearForm = (message) =>{
         setType('')
+        setAlertMsg(message);
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 2500);
         noteRef.current.value = '';
         amountRef.current.value = null;
         setDatePick(new Date());
+    }
+
+    const getActive = (json) => {
+        for(let i = 0; i < json.sheets.length; i++){
+            if(json.sheets[i].name === active.name){
+                setActive(json.sheets[i]);
+                break;
+            }
+        }
     }
 
     return (
@@ -57,24 +68,27 @@ const AddExpense = ({ quick }) => {
                     body={<AddExpensePayee />}
                 /> : <></>
             }
-
             <Card.Header>
                 <Row>
                     <Col><p>Add Expense</p></Col>
                     <Col style={{textAlign: 'right', paddingRight: '25px'}}>
-                        {quick ? <Link to='/expense'>View Expenses</Link> : <></>}
+                        {quick ? <Link to='/expenses'>View Expenses</Link> : <></>}
                     </Col>
                 </Row>
             </Card.Header>
             <Card.Body>
+                {showAlert ? <Alert variant='success'>{alertMsg}</Alert> : <></>}
                 <p>Select Date:</p>
                 <SelectDate datePick={datePick} setDatePick={setDatePick}/>
                 <br /><br />
 
                 <Form onSubmit={(e) => {
                     e.preventDefault();
-                    addExpense(currentUser.uid, active, datePick, type, payee, noteRef.current.value, amountRef.current.value)
-                    .then(json => setAccount(json))
+                    addExpense(account.uid, active, datePick, type, payee, noteRef.current.value, amountRef.current.value)
+                    .then(json => {
+                        setAccount(json);
+                        getActive(json);
+                    })
                     .then(() => clearForm('Expense added.'))
                 }}>
                     <Form.Label>Select Type</Form.Label>
@@ -84,38 +98,36 @@ const AddExpense = ({ quick }) => {
                             <Dropdown.Toggle size="sm">
                                 {type ? type : 'Select Type'}
                             </Dropdown.Toggle>
-
                             <Dropdown.Menu>
                                 {account.expenseTypes.map((type, index) => {
-                                    return <Dropdown.Item key={`${type}-${index}-dropdown`} eventKey={type}>{type}</Dropdown.Item>
+                                    return <Dropdown.Item key={`${type}-${index}-type-dropdown`} eventKey={type}>{type}</Dropdown.Item>
                                 })}
                             </Dropdown.Menu>
                             &nbsp;&nbsp;
                             <Button onClick={() => {
-                                setPopupType('type');
                                 setShowModal(true);
-                                }}>Create/Edit Type</Button>
+                                setPopupType('type');
+                            }}>Create/Edit Type</Button>
                         </Dropdown>
                     </InputGroup>
 
                     <Form.Label>Select Payee</Form.Label>
+                    
                     <InputGroup>
                         <Dropdown onSelect={(e) => setPayee(e)}>                     
                             <Dropdown.Toggle size="sm">
                                 {payee ? payee : 'Select Payee'}
                             </Dropdown.Toggle>
-
                             <Dropdown.Menu>
                                 {account.expensePayees.map((type, index) => {
                                     return <Dropdown.Item key={`${type}-${index}-payee-dropdown`} eventKey={type}>{type}</Dropdown.Item>
                                 })}
                             </Dropdown.Menu>
-                        
                             &nbsp;&nbsp;
                             <Button onClick={() => {
-                                setPopupType('payee');
                                 setShowModal(true);
-                                }}>Create/Edit Payee</Button>
+                                setPopupType('payee');
+                            }}>Create/Edit Payee</Button>
                         </Dropdown>
                     </InputGroup>
                   

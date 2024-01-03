@@ -17,59 +17,70 @@ import Overview from '../../components/Overview';
 import QuickAdd from '../../components/QuickAdd';
 
 //requests
-import { getAccount } from '../../requests/getAccount';
-import { addAccount } from '../../requests/addAccount';
+import { assignAccounts } from '../../requests/assignAccounts';
+
+//functions
+import getIncomeTotal from '../../functions/getIncomeTotal';
+import getExpenseTotal from '../../functions/getExpenseTotal';
+import getTotalSum from '../../functions/getTotalSum';
 
 const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     
-    const { currentUser, logout } = useAuth();
+    const { currentUser } = useAuth();
     const { account, setAccount, active, setActive } = useAccount();
-
+    
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(currentUser){
-            getAccount(currentUser.uid)
-            .then(json => {
-                if(!Object.keys(json).length){
-                    addAccount(currentUser.uid, currentUser.email)
-                    .then(json => setAccount(json))
-                    .then(() => setLoading(false))
-                }else{
-                    setAccount(json)
-                    setActive(json.sheets[json.sheets.length - 1])
-                }
-            })
-            .then(() => setLoading(false))
-        }
+        assignAccounts(currentUser)
+        .then(json => {
+            setAccount(json);
+            setActive(json.sheets[json.sheets.length - 1])
+            setLoading(false);
+        })
     }, [])
-
-    console.log('Account (Dashboard):', account)
-    console.log('Active (Dashboard):', active)
 
     return (
         <>
             {loading ? <Loading /> : 
                 <>
-                    <Navigation />
-
-                    {active ? <ActiveSheet /> : <></>}
-
-                        <Container>
-                            {!account.hoaName ? <CreateHOA /> : <></>}
-
-                            {account.hoaName && !account.sheets.length ? <CreateSheet/> : <></>}
-
-                            {active ? 
-                                <>
-                                    <Overview />
-                                    <QuickAdd />
-                                </>
-                                : <></>
-                            }
-                        </Container>
+                    {active ? <><Navigation /><ActiveSheet /></> : <></>}
+                    <Container>
+                        {!account.hoaName ? <CreateHOA /> : <></>}
+                        {!account.sheets.length ? <CreateSheet/> : <></>}
+                        {active ? 
+                            <>
+                                <Overview data={{
+                                    title: "Overview",
+                                    content: [
+                                        {
+                                            label: 'Starting Balance', 
+                                            value: `$${Number(active.startingBalance).toFixed(2)}`
+                                        },
+                                        {
+                                            label: 'Income Received', 
+                                            value: `$${getIncomeTotal(active).toFixed(2)}`
+                                        },
+                                        {
+                                            label: 'Expenses Paid', 
+                                            value: `$${getExpenseTotal(active).toFixed(2)}`
+                                        },
+                                        {
+                                            label: 'Current Balance', 
+                                            value: `$${getTotalSum(active)}`,
+                                        }
+                                    ],
+                                    graph: [
+                                        {label: 'Income', data: getIncomeTotal(active).toFixed(2)},
+                                        {label: 'Expense', data: getExpenseTotal(active).toFixed(2)}
+                                    ]
+                                }} />
+                                <QuickAdd />
+                            </> : <></>
+                        }
+                    </Container>
                 </>
             }
         </>

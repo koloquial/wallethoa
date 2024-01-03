@@ -7,25 +7,27 @@ import Splash from './views/Splash'
 import Dashboard from './views/Dashboard';
 import Income from './views/Income';
 import Expenses from './views/Expenses';
+import BalanceSheets from './views/BalanceSheets';
 
 const App = () => {
   return(
-    <>
-      <BrowserRouter>
-        <Routes>
+    <BrowserRouter>
+      <Routes>
+        <Route exact path='/splash' element={<Splash />} />
           <Route exact path='/' element={<PrivateRoute />}>
             <Route exact path='/' element={<Dashboard />} />
           </Route>
-          <Route exact path='/splash' element={<Splash />} />
           <Route exact path='/income' element={<PrivateRoute />}>
             <Route exact path='/income' element={<Income />} />
           </Route>
           <Route exact path='/expenses' element={<PrivateRoute />}>
             <Route exact path='/expenses' element={<Expenses />} />
           </Route>
-        </Routes>
-      </BrowserRouter>
-    </>
+          <Route exact path='/balance-sheets' element={<PrivateRoute />}>
+            <Route exact path='/balance-sheets' element={<BalanceSheets />} />
+          </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 

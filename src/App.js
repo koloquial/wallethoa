@@ -8,6 +8,8 @@ import Dashboard from './views/Dashboard';
 import Income from './views/Income';
 import Expenses from './views/Expenses';
 import BalanceSheets from './views/BalanceSheets';
+import Backup from './views/Backup';
+import HomeOwners from './views/HomeOwners';
 
 const App = () => {
   return(
@@ -25,6 +27,12 @@ const App = () => {
           </Route>
           <Route exact path='/balance-sheets' element={<PrivateRoute />}>
             <Route exact path='/balance-sheets' element={<BalanceSheets />} />
+          </Route>
+          <Route exact path='/home-owners' element={<PrivateRoute />}>
+            <Route exact path='/home-owners' element={<HomeOwners />} />
+          </Route>
+          <Route exact path='/backup' element={<PrivateRoute />}>
+            <Route exact path='/backup' element={<Backup />} />
           </Route>
       </Routes>
     </BrowserRouter>

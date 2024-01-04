@@ -29,3 +29,9 @@ a:hover{
     text-decoration: underline;
     cursor: pointer;
 }
+
+a:focus{
+    color: var(--white);
+    text-decoration: underline;
+    cursor: pointer;
+}

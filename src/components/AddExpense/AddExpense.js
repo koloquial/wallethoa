@@ -15,6 +15,9 @@ import AddExpensePayee from '../AddExpensePayee';
 //requests
 import { addExpense } from '../../requests/addExpense';
 
+//functions
+import getActive from '../../functions/getActive';
+
 const AddExpense = ({ quick }) => {
     //inputs
     const amountRef = useRef();
@@ -40,14 +43,6 @@ const AddExpense = ({ quick }) => {
         setDatePick(new Date());
     }
 
-    const getActive = (json) => {
-        for(let i = 0; i < json.sheets.length; i++){
-            if(json.sheets[i].name === active.name){
-                setActive(json.sheets[i]);
-                break;
-            }
-        }
-    }
 
     return (
         <Card>
@@ -87,7 +82,7 @@ const AddExpense = ({ quick }) => {
                     addExpense(account.uid, active, datePick, type, payee, noteRef.current.value, amountRef.current.value)
                     .then(json => {
                         setAccount(json);
-                        getActive(json);
+                        getActive(json, active, setActive);
                     })
                     .then(() => clearForm('Expense added.'))
                 }}>

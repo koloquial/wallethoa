@@ -1,7 +1,6 @@
 //state
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
 import { useAccount } from '../../contexts/AccountContext';
 
 //style
@@ -19,9 +18,8 @@ import Deposits from '../../components/Deposits';
 import Overview from '../../components/Overview';
 
 //functions
-import getIncomeTotal from '../../functions/getIncomeTotal';
-import getExpenseTotal from '../../functions/getExpenseTotal';
 import AddIncome from '../../components/AddIncome';
+import { getGraphData } from '../../functions/getGraphData';
 
 const Income = () => {
     const [loading, setLoading] = useState(true);
@@ -29,16 +27,6 @@ const Income = () => {
 
     const { currentUser, logout } = useAuth();
     const { account, setAccount, active, setActive } = useAccount();
-
-    const navigate = useNavigate();
-
-    const getDataset = () => {
-        let data = [];
-        active.income.forEach(item => {
-            data.push({data: Number(item.amount).toFixed(2), label: item.type})
-        })
-        return data;
-    }
 
     useEffect(() => {
         assignAccounts(currentUser)
@@ -56,18 +44,10 @@ const Income = () => {
                     <Navigation />
                     {active ? <ActiveSheet /> : <></>}
                     <Container>
-                        <Overview data={{
+                        <Overview colors={true} data={getGraphData({
                             title: "Income Overview",
-                            content: [
-                                {
-                                    label: 'Income Received', 
-                                    value: `$${getIncomeTotal(active).toFixed(2)}`
-                                },
-                            ],
-                            graph: [
-                                {label: 'Income', data: getIncomeTotal(active).toFixed(2)},
-                            ]
-                        }} />
+                            array: active.income,
+                            })} />
                         <AddIncome />
                         <Deposits />
                     </Container>

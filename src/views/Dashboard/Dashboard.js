@@ -1,7 +1,6 @@
 //state
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
 import { useAccount } from '../../contexts/AccountContext';
 
 //style
@@ -30,8 +29,6 @@ const Dashboard = () => {
     
     const { currentUser } = useAuth();
     const { account, setAccount, active, setActive } = useAccount();
-    
-    const navigate = useNavigate();
 
     useEffect(() => {
         assignAccounts(currentUser)
@@ -52,12 +49,12 @@ const Dashboard = () => {
                         {!account.sheets.length ? <CreateSheet/> : <></>}
                         {active ? 
                             <>
-                                <Overview data={{
+                                <Overview colors={false} data={{
                                     title: "Overview",
                                     content: [
                                         {
                                             label: 'Starting Balance', 
-                                            value: `$${Number(active.startingBalance).toFixed(2)}`
+                                            value: `$${parseFloat(active.startingBalance).toFixed(2)}`
                                         },
                                         {
                                             label: 'Income Received', 

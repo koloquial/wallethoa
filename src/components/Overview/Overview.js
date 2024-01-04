@@ -9,7 +9,7 @@ import { Row, Col, Card } from 'react-bootstrap';
 import ChartGraph from '../ChartGraph';
 import { useEffect, useState } from 'react';
 
-const Overview = ({ data }) => {
+const Overview = ({ data, colors }) => {
     const { account, setAccount, active, setActive } = useAccount();
 
     return (
@@ -21,11 +21,15 @@ const Overview = ({ data }) => {
                 <Row>
                     <Col>
                         {data.content.map((item, index) => {
-                            return (<p key={`${item.label}-index`}><b>{item.label}:</b><br /> {item.value}</p>)
+                            return (
+                                <p key={`${item.label}-index`}>
+                                    <b>{item.label}:</b><br /> {item.value}
+                                </p>
+                            )
                         })}
                     </Col>
                     <Col xs={6} style={{textAlign: 'center'}}>
-                        <ChartGraph dataset={data.graph} />
+                        <ChartGraph dataset={data.graph} colors={colors} />
                     </Col>
                 </Row>
             </Card.Body>

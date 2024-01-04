@@ -1,7 +1,7 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from 'react-chartjs-2';
 
-const ChartGraph = ({ dataset }) => {
+const ChartGraph = ({ dataset, colors }) => {
     ChartJS.register(ArcElement, Tooltip, Legend);
 
     let _labels = [];
@@ -17,9 +17,19 @@ const ChartGraph = ({ dataset }) => {
         datasets: [
           {
             data: _data,
-            backgroundColor: [
+            backgroundColor: !colors ? [
               'rgba(0, 250, 0, .3)',
               'rgba(250, 0, 0, .3)',
+            ] : 
+            [
+              'rgba(0, 250, 0, .3)',
+              'rgba(0, 125, 250, 0.3)',
+              'rgba(250, 250, 0, 0.3)',
+              'rgba(0, 246, 250, 0.3)',
+              'rgba(250, 104, 0, 0.3)',
+              'rgba(250, 0, 0, 0.3)',
+              'rgba(250, 0, 250, 0.3)',
+              'rgba(62, 0, 250, 0.3)',
             ],
             borderWidth: 0,
           },

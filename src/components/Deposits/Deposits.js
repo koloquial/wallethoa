@@ -13,6 +13,7 @@ import ViewDeposit from '../ViewDeposit';
 const Deposits = () => {
     const { active } = useAccount();
     const [view, setView] = useState('');
+    const [itemIndex, setItemIndex] = useState()
     const [showModal, setShowModal] = useState();
 
     return (
@@ -22,7 +23,7 @@ const Deposits = () => {
                 showModal={showModal} 
                 setShowModal={setShowModal} 
                 header={'Deposit'} 
-                body={<ViewDeposit item={view} />}
+                body={<ViewDeposit item={view} setShowModal={setShowModal} index={itemIndex} />}
             />
 
             <Card.Header>
@@ -45,6 +46,7 @@ const Deposits = () => {
                                 <td style={{textAlign: 'center'}}>${Number(item.amount).toFixed(2)}</td>
                                 <td style={{textAlign: 'center'}}><Button size="sm" onClick={() => {
                                     setView(item);
+                                    setItemIndex(index);
                                     setShowModal(true);
                                     }}><GrView /></Button></td>
                             </tr>

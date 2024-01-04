@@ -6,15 +6,18 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 import { FaRegStickyNote } from "react-icons/fa";
 
 import { Button, Form, Row, Col } from 'react-bootstrap'
-import { useRef } from 'react'; 
+import { useRef, useState } from 'react'; 
 
 import { addNote } from '../../requests/addNote';
 import { useAccount } from '../../contexts/AccountContext';
 import getActive from '../../functions/getActive';
+import { deleteDeposit } from "../../requests/deleteDeposit";
 
-const ViewDeposit = ({ item }) => {
-
+const ViewDeposit = ({ item, index, setShowModal }) => {
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [edit, setEdit] = useState();
     const noteRef = useRef();
+    const editNoteRef = useRef();
     const { account, setAccount, active, setActive } = useAccount();
 
     const handleSubmit = (e) => {
@@ -35,8 +38,18 @@ const ViewDeposit = ({ item }) => {
         noteRef.current.value = null;
     }
 
+    const handleDelete = () => {
+        deleteDeposit(account.uid, active, index)
+        .then(json => {
+            setAccount(json);
+            getActive(json, active, setActive);
+            setShowModal(false);
+        })
+    }
+
     return (
         <>
+        {!edit ? 
             <table>
                 <thead>
                     <tr>
@@ -51,32 +64,79 @@ const ViewDeposit = ({ item }) => {
                         <td style={{textAlign: 'center'}}>{item.postDate.split('T')[0]}</td>
                         <td style={{textAlign: 'center'}}>{item.type}</td>
                         <td style={{textAlign: 'center'}}>${Number(item.amount).toFixed(2)}</td>
-                        <td style={{textAlign: 'center'}}><Button variant='primary'><CiEdit /></Button></td>
+                        <td style={{textAlign: 'center'}}><Button variant='primary' onClick={() => setEdit('item')}><CiEdit /></Button></td>
                     </tr>
                 </tbody>
             </table>
+            : <></>}
 
             <table>
                 <thead>
                     <tr>
-                        <th style={{textAlign: 'center', width: '30%'}}>Date</th>
-                        <th style={{textAlign: 'center'}}>Note</th>
+                        {!edit ? <>
+                            <th style={{textAlign: 'left', width: '30%'}}>Date</th>
+                        <th style={{textAlign: 'left'}}>Note</th>
+                        </> : <><th></th></>}
+                        
+                        <th style={{textAlign: 'center'}}>Edit</th>
+
+                        {!edit ? <></> : <th></th>}
                     </tr>
                 </thead>
                 <tbody>
-                    {item.notes.map(note => {
+                    {item.notes.map((note, index) => {
                         return (
-                            <tr>
-                                <td>{JSON.stringify(note.date).split('"')[1].split('T')[0]}</td>
-                                <td>{note.content}</td>
-                            </tr>
+                            <>
+                                {edit === `note-${note.date}-${index}` ?
+                                    <>
+                                        <tr key={`note-${note.date}-${index}`}>
+                                            <td>
+                                                <Form.Group>
+                                                    <Form.Label>Note Date</Form.Label>
+                                                    <Form.Control type="text" /> 
+                                                </Form.Group>
+                                                
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <Form.Group>
+                                                    <Form.Label>Note</Form.Label>
+                                                    <Form.Control type="text" placeholder={note.content} ref={editNoteRef} /> 
+                                                </Form.Group>
+                                                
+                                            </td>
+                                        </tr>
+                                    </>
+                                    :
+                                    <>
+                                    {edit ? <></> : 
+                                    <>
+                                       <tr key={`note-${note.date}-${index}`}>
+                                            <td style={{textAlign: 'left'}}>{JSON.stringify(note.date).split('"')[1].split('T')[0]}</td>
+                                            <td style={{textAlign: 'left'}}>{note.content}</td>
+                                            <td style={{textAlign: 'center'}}><Button variant='primary' onClick={() => setEdit(`note-${note.date}-${index}`)}><CiEdit /></Button></td>
+                                        </tr>
+                                    </>}
+                                        
+                                    </>
+                                }
+                            </>
                         )
                     })}
                 </tbody>
             </table>
+     
+            
             <br />
-
-            <Form onSubmit={handleSubmit}>
+            
+            {edit ? 
+            <Row style={{width: '100%'}}>
+            <Col style={{textAlign: 'center'}}><Button variant='danger' onClick={() => console.log('')}><MdDelete /></Button></Col>
+            <Col style={{textAlign: 'center'}}><Button variant='secondary' onClick={() => setEdit('')}><MdCancel /></Button></Col>
+            <Col style={{textAlign: 'center'}}><Button type='submit'><IoIosCheckmarkCircle /></Button></Col>
+            </Row>
+         : 
+                <Form onSubmit={handleSubmit}>
                 <Form.Group>
                     <Form.Label>
                         Add Note
@@ -84,12 +144,25 @@ const ViewDeposit = ({ item }) => {
                     <Form.Control type='text' ref={noteRef} />
                 </Form.Group>
                 <div style={{textAlign: 'right'}}><Button type='submit'>Submit</Button></div>
-            </Form>
-            <br /><br />
-            <Row>
-                <Col style={{textAlign: 'center'}}><Button variant='danger'>Delete Deposit</Button></Col>
-                <Col style={{textAlign: 'center'}}><Button variant='secondary'>Cancel</Button></Col>
-            </Row>
+
+                <br /><br />
+                {confirmDelete ? 
+                <>
+                    <p>Are you sure you would like to delete deposit: <b>{item.type} - ${item.amount}</b>?</p>
+                    <Row>
+                        <Col style={{textAlign: 'center'}}><Button variant='danger' onClick={() => handleDelete()}>Delete</Button></Col>
+                        <Col style={{textAlign: 'center'}}><Button variant='secondary' onClick={() => setConfirmDelete(false)}>Cancel</Button></Col>
+                    </Row>
+                </>
+                : 
+                <Row>
+                    <Col style={{textAlign: 'center'}}><Button variant='danger' onClick={() => setConfirmDelete(true)}>Delete Deposit</Button></Col>
+                    <Col style={{textAlign: 'center'}}><Button variant='secondary' onClick={() => setShowModal(false)}>Cancel</Button></Col>
+                </Row>}
+            </Form>}
+            
+            
+            
         </>
     )
 }

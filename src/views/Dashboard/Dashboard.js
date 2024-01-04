@@ -36,6 +36,7 @@ const Dashboard = () => {
     useEffect(() => {
         assignAccounts(currentUser)
         .then(json => {
+            console.log('json', json)
             setAccount(json);
             setActive(json.sheets[json.sheets.length - 1])
             setLoading(false);

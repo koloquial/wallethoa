@@ -6,12 +6,25 @@ import { GrView } from "react-icons/gr";
 
 //state
 import { useAccount } from '../../contexts/AccountContext'
+import { useState } from 'react';
+import Popup from '../Popup';
+import ViewDeposit from '../ViewDeposit';
 
 const Deposits = () => {
     const { active } = useAccount();
+    const [view, setView] = useState('');
+    const [showModal, setShowModal] = useState();
 
     return (
         <Card>
+            
+            <Popup 
+                showModal={showModal} 
+                setShowModal={setShowModal} 
+                header={'Deposit'} 
+                body={<ViewDeposit item={view} />}
+            />
+
             <Card.Header>
                 <p>Deposits</p>
             </Card.Header>
@@ -30,7 +43,10 @@ const Deposits = () => {
                             <tr key={`list-${item.postDate}-${index}`}>
                                 <td style={{textAlign: 'center'}}>{item.postDate.split('T')[0]}</td>
                                 <td style={{textAlign: 'center'}}>${Number(item.amount).toFixed(2)}</td>
-                                <td style={{textAlign: 'center'}}><Button size="sm" onClick={() => console.log('test')}><GrView /></Button></td>
+                                <td style={{textAlign: 'center'}}><Button size="sm" onClick={() => {
+                                    setView(item);
+                                    setShowModal(true);
+                                    }}><GrView /></Button></td>
                             </tr>
                         )
                     })}

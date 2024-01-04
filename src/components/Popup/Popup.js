@@ -1,6 +1,7 @@
 import { Button, Modal } from 'react-bootstrap';
 
 const Popup = ({ showModal, setShowModal, header, body }) => {
+
   return (
     <Modal
         show={showModal}

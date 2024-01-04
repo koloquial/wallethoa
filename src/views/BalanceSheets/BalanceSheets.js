@@ -65,7 +65,6 @@ const BalanceSheets = () => {
                                             <th>Name</th>
                                             <th>Balance</th>
                                             <th>View/Edit</th>
-                                            
                                         </tr>
                                     </thead>
                                     <tbody>

@@ -70,10 +70,11 @@ const AddIncome = ({ quick }) => {
 
                 <Form onSubmit={(e) => {
                     e.preventDefault();
-                    addDeposit(account.uid, active, datePick, type, noteRef.current.value, amountRef.current.value)
+                    console.log('TYPE', type)
+                    addDeposit(account.uid, active, datePick, type, {date: new Date(), content: noteRef.current.value}, amountRef.current.value)
                     .then(json => {
                         setAccount(json);
-                        getActive(json)
+                        getActive(json, active, setActive)
                     })
                     .then(() => clearForm('Deposit added.'))
                 }}>

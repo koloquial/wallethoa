@@ -21,7 +21,7 @@ const Overview = ({ data }) => {
                 <Row>
                     <Col>
                         {data.content.map(item => {
-                            return (<p><b>{item.label}:</b> {item.value}</p>)
+                            return (<p><b>{item.label}:</b><br /> {item.value}</p>)
                         })}
                     </Col>
                     <Col xs={6} style={{textAlign: 'center'}}>

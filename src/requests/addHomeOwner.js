@@ -1,14 +1,22 @@
-export const addHomeOwner = async ( uid, sheet, postDate, type, note, amount) => {
+export const addHomeOwner = async (data) => {
     return await fetch(`http://localhost:5000/users/add/home-owner`, {
         method: 'POST',
         body: JSON.stringify({
-            uid: uid,
-            sheet: sheet,
-            postDate: postDate,
-            type: type,
-            note: note,
-            amount: amount,
-            dateCreated: new Date(),
+            uid: data.uid,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            address1: data.address1,
+            address2: data.address2,
+            city: data.city,
+            state: data.state,
+            zipcode: data.zipcode,
+            phone: data.phone,
+            email: data.email,
+            emergName: data.emergName,
+            emergPhone: data.emergPhone,
+            ownership: data.ownership,
+            note: data.note,
+            dues: data.dues,
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"

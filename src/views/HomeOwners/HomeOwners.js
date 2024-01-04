@@ -16,7 +16,13 @@ import AddOwner from '../../components/AddOwner';
 import { assignAccounts } from '../../requests/assignAccounts';
 
 //functions
-import getActive from '../../functions/getActive'
+import getActive from '../../functions/getActive';
+
+//icons
+import { CiEdit } from "react-icons/ci";
+import { MdDelete } from "react-icons/md";
+import { MdCancel } from "react-icons/md";
+import { IoIosCheckmarkCircle } from "react-icons/io";
 
 const HomeOwners = () => {
     const [loading, setLoading] = useState(true);
@@ -33,10 +39,6 @@ const HomeOwners = () => {
             setLoading(false);
         })
     }, [])
-
-    const addHomeOwner = () => {
-
-    }
 
     const clearForm = () => {
 
@@ -56,16 +58,18 @@ const HomeOwners = () => {
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>View/Edit</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {account.homeOwners.map(owner => {
                                             return (
                                                 <tr>
-                                                    <td>{owner.name}</td>
+                                                    <td style={{textAlign: 'center'}}>{owner.address1}</td>
+                                                    <td style={{textAlign: 'center'}}>{owner.address2}</td>
+                                                    <td style={{textAlign: 'center'}}><Button size="sm" onClick={() => console.log('edit')}><CiEdit /></Button></td>
                                                 </tr>
                                             )
                                         })}

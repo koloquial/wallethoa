@@ -5,6 +5,12 @@ import { Card, Container, Form, Button, Row, Col } from 'react-bootstrap';
 import { addHomeOwner } from '../../requests/addHomeOwner';
 import getActive from '../../functions/getActive';
 
+//icons
+import { CiEdit } from "react-icons/ci";
+import { MdDelete } from "react-icons/md";
+import { MdCancel } from "react-icons/md";
+import { IoIosCheckmarkCircle } from "react-icons/io";
+
 const AddOwner = () => {
     const { currentUser } = useAuth();
     const { account, setAccount, active, setActive } = useAccount();
@@ -28,6 +34,27 @@ const AddOwner = () => {
 
     }
 
+    const getFormData = () => {
+        let data = {
+            uid: account.uid,
+            firstName: firstNameRef.current.value,
+            lastName: lastNameRef.current.value,
+            address1: address1Ref.current.value,
+            address2: address2Ref.current.value,
+            city: cityRef.current.value,
+            state: stateRef.current.value,
+            zipcode: zipRef.current.value,
+            phone: phoneRef.current.value,
+            email: emailRef.current.value,
+            emergName: emergencyNameRef.current.value,
+            emergPhone: emergencyPhoneRef.current.value,
+            ownership: ownershipRef.current.value,
+            dues: duesRef.current.value,
+            note: noteRef.current.value,
+        }
+        return data;
+    }
+
     return (
         <Card>
             <Card.Header>
@@ -36,7 +63,7 @@ const AddOwner = () => {
             <Card.Body>
                 <Form onSubmit={(e) => {
                     e.preventDefault();
-                    addHomeOwner(account.uid)
+                    addHomeOwner(getFormData())
                     .then(json => {
                         setAccount(json);
                         getActive(json, active, setActive);

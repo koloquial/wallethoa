@@ -6,7 +6,7 @@ import { GrView } from "react-icons/gr";
 
 //state
 import { useAccount } from '../../contexts/AccountContext'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Popup from '../Popup';
 import ViewDeposit from '../ViewDeposit';
 
@@ -23,7 +23,12 @@ const Deposits = () => {
                 showModal={showModal} 
                 setShowModal={setShowModal} 
                 header={'Deposit'} 
-                body={<ViewDeposit item={view} setShowModal={setShowModal} index={itemIndex} />}
+                body={<ViewDeposit 
+                    view={view}
+                    setView={setView}
+                    setShowModal={setShowModal} 
+                    itemIndex={itemIndex} 
+                />}
             />
 
             <Card.Header>
@@ -33,18 +38,18 @@ const Deposits = () => {
                 <table>
                     <thead>
                         <tr>
-                            <th style={{textAlign: 'center'}}>Post Date</th>
-                            <th style={{textAlign: 'center'}}>Amount</th>
-                            <th style={{textAlign: 'center'}}>View/Edit</th>
+                            <th>Post Date</th>
+                            <th>Amount</th>
+                            <th>View/Edit</th>
                         </tr>
                     </thead>
                     <tbody>
                     {active.income.map((item, index) => {
                         return (
                             <tr key={`list-${item.postDate}-${index}`}>
-                                <td style={{textAlign: 'center'}}>{item.postDate.split('T')[0]}</td>
-                                <td style={{textAlign: 'center'}}>${Number(item.amount).toFixed(2)}</td>
-                                <td style={{textAlign: 'center'}}><Button size="sm" onClick={() => {
+                                <td>{item.postDate.split('T')[0]}</td>
+                                <td>${Number(item.amount).toFixed(2)}</td>
+                                <td><Button size="sm" onClick={() => {
                                     setView(item);
                                     setItemIndex(index);
                                     setShowModal(true);

@@ -4,13 +4,12 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useAccount } from '../../contexts/AccountContext';
 
 //style
-import { Card, Container, Row, Col, Button } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 //components
 import Loading from '../../components/Loading';
 import Navigation from '../../components/Navigation';
 import ActiveSheet from '../../components/ActiveSheet';
-import ChartGraph from '../../components/ChartGraph'
 
 //requests
 import { assignAccounts } from '../../requests/assignAccounts';

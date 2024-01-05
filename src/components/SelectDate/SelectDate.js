@@ -11,7 +11,9 @@ const SelectDate = ({ datePick, setDatePick }) => {
 
   return (
     <DatePicker 
+        showIcon
         selected={startDate} 
+        dateFormat="yyyy - MM - dd"
         onChange={(date) => setStartDate(date)} 
     />
   );

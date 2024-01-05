@@ -62,7 +62,7 @@ const AddExpenseType = () => {
 
             {account.expenseTypes.length ? 
                 <>
-                    <p>Available Types:</p>
+                    <p>Available Types</p>
                     <table>
                         <thead>
                             <tr>

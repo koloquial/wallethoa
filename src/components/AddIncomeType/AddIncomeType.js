@@ -62,7 +62,7 @@ const AddIncomeType = () => {
 
             {account.incomeTypes.length ? 
                 <>
-                    <p>Available Types:</p>
+                    <p>Available Types</p>
                     <table>
                         <thead>
                             <tr>

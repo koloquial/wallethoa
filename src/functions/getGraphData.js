@@ -1,20 +1,23 @@
 export const getGraphData = ({title, array, content}) => {
     let data = {};
 
-    //organize into key (label) value pairs
+    //prganized into key value pairs
     array.forEach(item => {
        if(data[item.type]){
-           data[item.type] += Number(item.amount).toFixed(2);
+           data[item.type] += parseFloat(item.amount).toFixed(2);
        }else{
-           data[item.type] = Number(item.amount).toFixed(2);
+           data[item.type] = parseFloat(item.amount).toFixed(2);
        }
     })
 
+    //create graph data
     let graph = [];
     for(let key in data){
         graph.push({label: key, data: data[key]})
     }
 
+    //check to see if content was generated
+    //if not - generate content for overview
     let temp = [];
     if(!content){
         let totalReceived = 0;
@@ -31,16 +34,14 @@ export const getGraphData = ({title, array, content}) => {
         })
         temp.unshift({
             label: 'Total Received',
-            value: `$${totalReceived}` 
+            value: `$${parseFloat(totalReceived).toFixed(2)}` 
         })
         content = temp;
     }
 
-    let res = {
+    return {
         title: title,
         content: content,
         graph: graph
-    }
-
-    return res;
+    };
 }

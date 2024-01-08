@@ -20,6 +20,7 @@ import Overview from '../../components/Overview';
 import getExpenseTotal from '../../functions/getExpenseTotal';
 import AddExpense from '../../components/AddExpense';
 import ExpensesList from '../../components/ExpensesList';
+import ListSlips from '../../components/ListSlips';
 
 const Expenses = () => {
     const [loading, setLoading] = useState(true);
@@ -57,7 +58,7 @@ const Expenses = () => {
                             ]
                         }} />
                         <AddExpense />
-                        <ExpensesList />
+                        <ListSlips type={'expenses'} />
                     </Container>
                 </>
             }

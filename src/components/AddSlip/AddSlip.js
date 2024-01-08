@@ -22,7 +22,6 @@ const AddSlip = ({ slip }) => {
     //inputs
     const amountRef = useRef();
     const noteRef = useRef('');
-    const typeNameRef = useRef('');
     const [type, setType] = useState('');
     const [payee, setPayee] = useState('');
     const [datePick, setDatePick] = useState(new Date());
@@ -48,7 +47,14 @@ const AddSlip = ({ slip }) => {
         e.preventDefault();
 
         if(slip === 'deposit'){
-            addDeposit(account.uid, active, datePick, type, {date: new Date(), content: noteRef.current.value}, amountRef.current.value)
+            addDeposit(
+                account.uid, 
+                active, 
+                datePick, 
+                type, 
+                {date: new Date(), content: noteRef.current.value}, 
+                amountRef.current.value
+            )
             .then(json => {
                 setAccount(json);
                 getActive(json, active, setActive);
@@ -57,7 +63,15 @@ const AddSlip = ({ slip }) => {
         }
 
         if(slip === 'expense'){
-            addExpense(account.uid, active, datePick, type, payee, noteRef.current.value, amountRef.current.value)
+            addExpense(
+                account.uid, 
+                active, 
+                datePick, 
+                type, 
+                payee, 
+                noteRef.current.value, 
+                amountRef.current.value
+            )
             .then(json => {
                 setAccount(json);
                 getActive(json, active, setActive);
@@ -71,13 +85,12 @@ const AddSlip = ({ slip }) => {
             case 'incomeTypes': return 'Create/Edit Deposit Type';
             case 'expenseTypes': return 'Create/Edit Expense Type';
             case 'expensePayees': return 'Create/Edit Payee Name';
-            default: return 'Edit'
+            default: return 'Edit';
         }
     }
 
     return (
         <>
-            
             <Popup 
                 showModal={showModal} 
                 setShowModal={setShowModal}
@@ -94,6 +107,7 @@ const AddSlip = ({ slip }) => {
                     <Form.Group>
                         <Form.Label>Select Type</Form.Label>
                         <Form.Select onChange={(e) => setType(e.target.value)}>
+                            <option key={'default-val'}>Select Type</option>
                             {account.incomeTypes.map((type, index) => {
                                 return <option key={`${type}-${index}-deposit-type`}>{type}</option>
                             })}
@@ -122,6 +136,7 @@ const AddSlip = ({ slip }) => {
                     <Form.Group>
                         <Form.Label>Select Payee</Form.Label>
                         <Form.Select onChange={(e) => setType(e.target.value)}>
+                            <option key={'default-val'}>Select Type</option>
                             {account.expensePayees.map((type, index) => {
                                     return <option key={`${type}-${index}-expens-payee`}>{type}</option>
                                 })}
@@ -135,7 +150,7 @@ const AddSlip = ({ slip }) => {
                 
                 <Form.Group>
                     <Form.Label>Enter Amount <i>($0.00)</i></Form.Label>
-                    <Form.Control type="number" step=".01" id="amount" ref={amountRef}></Form.Control>
+                    <Form.Control type="number" step=".01" id="amount" ref={amountRef} required></Form.Control>
                 </Form.Group>
 
                 <Form.Group>

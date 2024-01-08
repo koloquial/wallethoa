@@ -19,6 +19,7 @@ import { assignAccounts } from '../../requests/assignAccounts';
 
 //functions
 import { getGraphData } from '../../functions/getGraphData';
+import ListSlips from '../../components/ListSlips';
 
 
 const Income = () => {
@@ -49,7 +50,7 @@ const Income = () => {
                             array: active.income,
                             })} />
                         <AddDeposit />
-                        <DepositList />
+                        <ListSlips type={'income'} />
                     </Container>
                 </>
             }

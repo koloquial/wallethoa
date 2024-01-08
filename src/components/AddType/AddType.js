@@ -165,7 +165,7 @@ const AddType = ({ type }) => {
                                 onChange={(e) => setUpdatedName(e.target.value)} 
                                 required 
                             />
-                        </Form.Group> : <></>
+                        </Form.Group>
 
                         <Button disabled={loading} type='submit'>Submit</Button>
                         </Form>

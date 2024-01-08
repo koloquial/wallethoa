@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react'; 
 
 //style
-import { Row, Col, Button, Form, Select } from 'react-bootstrap'
+import { Row, Col, Button, Form, Select, Alert } from 'react-bootstrap'
 
 //functions
 import getActive from '../../functions/getActive';
@@ -23,16 +23,26 @@ const ViewSlip = ({ view, itemIndex, setView }) => {
 
     //input values
     const [datePick, setDatePick] = useState();
-    const noteRef = useRef();
-
     const [editIndex, setEditIndex] = useState();
     const [updatedNote, setUpdatedNote] = useState('');
+    const [alertMsg, setAlertMsg] = useState();
+    const [showAlert, setShowAlert] = useState();
  
     //view changes
     const [edit, setEdit] = useState();
     const [confirmDelete, setConfirmDelete] = useState(false);
     
     const clearForm = (message) => {
+        setConfirmDelete(false);
+        setEdit(false);
+        setEditIndex();
+        setUpdatedNote();
+
+        if(message){
+            setAlertMsg(message);
+            setShowAlert(true);
+            setTimeout(() => setShowAlert(false), 2500);
+        }
     }
 
     const handleUpdateNote = (e) => {
@@ -48,11 +58,10 @@ const ViewSlip = ({ view, itemIndex, setView }) => {
         .then(json => {
             setAccount(json);
             getActive(json, active, setActive);
-            setEdit(false);
-            setEditIndex();
             let act = returnActive(json, active);
             setView(act.income[itemIndex])
         })
+        .then(() => clearForm('Updated note.'))
     }
 
     const handleDeleteNote = (e) => {
@@ -86,6 +95,7 @@ const ViewSlip = ({ view, itemIndex, setView }) => {
         <>
             {!edit ? 
                 <>
+                {showAlert ? <Alert variant='success'>{alertMsg}</Alert> : <></>}
                     <Form onSubmit={handleAddNote}>
                         <Form.Group>
                             <Form.Label>

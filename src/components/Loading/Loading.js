@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap';
 const Loading = () => {
     return (
         <Container 
-            className='d-flex align-items-center justify-content-center splash' 
+            className='d-flex align-items-center justify-content-center' 
             style={{minHeight: '100vh'}}
             fluid>
             <div className='loader' />

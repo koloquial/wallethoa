@@ -12,6 +12,7 @@ a:not([href]):not([class]):hover{
 
 .nav-link{
     color: var(--alt);
+    font-size: small;
 }
 
 .nav-link:hover{
@@ -34,4 +35,8 @@ a:focus{
     color: var(--white);
     text-decoration: underline;
     cursor: pointer;
+}
+
+.navbar-brand:hover{
+    color: var(--alt);
 }

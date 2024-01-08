@@ -10,12 +10,15 @@ const SelectDate = ({ datePick, setDatePick }) => {
   }, [startDate])
 
   return (
-    <DatePicker 
-        showIcon
-        selected={startDate} 
-        dateFormat="yyyy - MM - dd"
-        onChange={(date) => setStartDate(date)} 
-    />
+    <div style={{marginBottom: '10px'}}>
+      <p>Select Date:</p>
+      <DatePicker 
+          showIcon
+          selected={startDate} 
+          dateFormat="yyyy - MM - dd"
+          onChange={(date) => setStartDate(date)} 
+      />
+    </div>
   );
 };
 

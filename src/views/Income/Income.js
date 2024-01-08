@@ -10,15 +10,16 @@ import { Container } from 'react-bootstrap';
 import Loading from '../../components/Loading';
 import Navigation from '../../components/Navigation';
 import ActiveSheet from '../../components/ActiveSheet';
+import DepositList from '../../components/DepositList';
+import Overview from '../../components/Overview';
+import AddDeposit from '../../components/AddDeposit';
 
 //requests
 import { assignAccounts } from '../../requests/assignAccounts';
-import Deposits from '../../components/Deposits';
-import Overview from '../../components/Overview';
 
 //functions
-import AddIncome from '../../components/AddIncome';
 import { getGraphData } from '../../functions/getGraphData';
+
 
 const Income = () => {
     const [loading, setLoading] = useState(true);
@@ -47,8 +48,8 @@ const Income = () => {
                             title: "Income Overview",
                             array: active.income,
                             })} />
-                        <AddIncome />
-                        <Deposits />
+                        <AddDeposit />
+                        <DepositList />
                     </Container>
                 </>
             }

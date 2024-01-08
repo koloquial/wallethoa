@@ -18,7 +18,6 @@ const Deposits = () => {
 
     return (
         <Card>
-            
             <Popup 
                 showModal={showModal} 
                 setShowModal={setShowModal} 

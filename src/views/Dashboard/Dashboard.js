@@ -13,7 +13,6 @@ import CreateHOA from '../../components/CreateHOA';
 import CreateSheet from '../../components/CreateSheet';
 import ActiveSheet from '../../components/ActiveSheet';
 import Overview from '../../components/Overview';
-import QuickAdd from '../../components/QuickAdd';
 
 //requests
 import { assignAccounts } from '../../requests/assignAccounts';
@@ -74,7 +73,6 @@ const Dashboard = () => {
                                         {label: 'Expense', data: getExpenseTotal(active).toFixed(2)}
                                     ]
                                 }} />
-                                <QuickAdd />
                             </> : <></>
                         }
                     </Container>

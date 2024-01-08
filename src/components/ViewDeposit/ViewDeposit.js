@@ -201,30 +201,29 @@ const ViewDeposit = ({ view, itemIndex, setShowModal, setView }) => {
                         )
                     })}
                     {edit === 'this' ? 
+                    <div style={{textAlign: 'left'}}>
                         <tr>
                             <td>
                                 <p>Select Date:</p>
                                 {console.log('datepick', datePick)}
                                 <SelectDate datePick={datePick} setDatePick={setDatePick}/>
-                            </td>
-                            <td>
-                            <Form.Label>
+                                <br />
+                                <Form.Label>
                                     Type
                                 </Form.Label>
-                            <Form.Select defaultValue={view.type}>
-                                {account.incomeTypes.map(item => {
-                                    return <option>{item}</option>
-                                })}
-                            </Form.Select>
-                            </td>
-                            <td>
+                                <Form.Select defaultValue={view.type}>
+                                    {account.incomeTypes.map(item => {
+                                        return <option>{item}</option>
+                                    })}
+                                </Form.Select>
+                                <br />
                                 <Form.Label>
-                                    Amount ($)
-                                </Form.Label>
-                                <Form.Control type='text' defaultValue={view.amount} />
+                                        Amount ($)
+                                    </Form.Label>
+                                    <Form.Control type='text' defaultValue={view.amount} />
                             </td>
                         </tr>
-                     : <></>}
+                     </div> : <></>}
                 </tbody>
             </table>
 

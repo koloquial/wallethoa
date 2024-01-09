@@ -29,7 +29,7 @@ const Overview = ({ data, colors }) => {
                         })}
                     </Col>
                     <Col xs={6} style={{textAlign: 'center'}}>
-                        <ChartGraph dataset={data.graph} colors={colors} />
+                        <ChartGraph dataset={data.graph} colors={colors} />   
                     </Col>
                 </Row>
             </Card.Body>

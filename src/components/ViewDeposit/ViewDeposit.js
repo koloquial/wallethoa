@@ -14,7 +14,7 @@ import returnActive from '../../functions/returnActive';
 //requests
 import { addNote } from '../../requests/addNote';
 import { useAccount } from '../../contexts/AccountContext';
-import { deleteDeposit } from "../../requests/deleteDeposit";
+import { deleteDeposit } from "../../requests/deleteSlip";
 import { updateNote } from '../../requests/updateNote';
 
 //components
@@ -116,9 +116,9 @@ const ViewDeposit = ({ view, itemIndex, setShowModal, setView }) => {
                 <table>
                     <thead>
                         <tr>
-                            <th style={{textAlign: 'left'}}>Post Date</th>
-                            <th style={{textAlign: 'left'}}>Type</th>
-                            <th style={{textAlign: 'left'}}>Amount</th>
+                            <th>Post Date</th>
+                            <th>Type</th>
+                            <th>Amount</th>
                             <th style={{textAlign: 'center'}}>Edit</th>
                         </tr>
                     </thead>
@@ -146,8 +146,8 @@ const ViewDeposit = ({ view, itemIndex, setShowModal, setView }) => {
                     <tr>
                         {!edit ? 
                             <>
-                                <th style={{textAlign: 'left', width: '30%'}}>Date</th>
-                                <th style={{textAlign: 'left', width: 'auto'}}>Note</th>
+                                <th>Date</th>
+                                <th>Note</th>
                                 <th>Edit</th>
                             </> 
                         : ''}
@@ -205,7 +205,6 @@ const ViewDeposit = ({ view, itemIndex, setShowModal, setView }) => {
                         <tr>
                             <td>
                                 <p>Select Date:</p>
-                                {console.log('datepick', datePick)}
                                 <SelectDate datePick={datePick} setDatePick={setDatePick}/>
                                 <br />
                                 <Form.Label>

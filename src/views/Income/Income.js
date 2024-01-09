@@ -10,7 +10,6 @@ import { Container } from 'react-bootstrap';
 import Loading from '../../components/Loading';
 import Navigation from '../../components/Navigation';
 import ActiveSheet from '../../components/ActiveSheet';
-import DepositList from '../../components/DepositList';
 import Overview from '../../components/Overview';
 import AddDeposit from '../../components/AddDeposit';
 
@@ -20,7 +19,6 @@ import { assignAccounts } from '../../requests/assignAccounts';
 //functions
 import { getGraphData } from '../../functions/getGraphData';
 import ListSlips from '../../components/ListSlips';
-
 
 const Income = () => {
     const [loading, setLoading] = useState(true);

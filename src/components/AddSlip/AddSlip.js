@@ -108,9 +108,9 @@ const AddSlip = ({ slip }) => {
                         <Form.Label>Select Type</Form.Label>
                         <Form.Select onChange={(e) => setType(e.target.value)}>
                             <option key={'default-val'}>Select Type</option>
-                            {account.incomeTypes.map((type, index) => {
-                                return <option key={`${type}-${index}-deposit-type`}>{type}</option>
-                            })}
+                                {account.incomeTypes.map((type, index) => {
+                                    return <option key={`${type}-${index}-deposit-type`}>{type}</option>
+                                })}
                         </Form.Select>
                         <Button onClick={() => {
                             setShowModal(true);
@@ -132,12 +132,12 @@ const AddSlip = ({ slip }) => {
                     </Form.Group>
                 }
 
-                {slip == 'expense' ? 
+                {slip === 'expense' ? 
                     <Form.Group>
                         <Form.Label>Select Payee</Form.Label>
                         <Form.Select onChange={(e) => setType(e.target.value)}>
                             <option key={'default-val'}>Select Type</option>
-                            {account.expensePayees.map((type, index) => {
+                                {account.expensePayees.map((type, index) => {
                                     return <option key={`${type}-${index}-expens-payee`}>{type}</option>
                                 })}
                         </Form.Select>

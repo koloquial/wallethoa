@@ -1,5 +1,5 @@
 export const deleteDeposit = async (uid, sheet, index) => {
-    return await fetch(`http://localhost:5000/users/delete/deposit`, {
+    return await fetch(`${process.env.REACT_APP_MONGO_DB_URI}/users/delete/deposit`, {
         method: 'POST',
         body: JSON.stringify({
             uid: uid,

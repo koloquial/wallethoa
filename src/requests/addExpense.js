@@ -1,5 +1,5 @@
 export const addExpense = async (uid, sheet, datePick, type, payee, note, amount) => {
-    return await fetch(`http://localhost:5000/users/add/expense`, {
+    return await fetch(`${process.env.REACT_APP_MONGO_DB_URI}/users/add/expense`, {
         method: 'POST',
         body: JSON.stringify({
             uid: uid,

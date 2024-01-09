@@ -1,5 +1,5 @@
 export const deleteExpensePayee = async (uid, index) => {
-    return await fetch(`http://localhost:5000/users/delete/expense-payee`, {
+    return await fetch(`${process.env.REACT_APP_MONGO_DB_URI}/users/delete/expense-payee`, {
         method: 'POST',
         body: JSON.stringify({
             uid: uid,

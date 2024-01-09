@@ -1,5 +1,5 @@
 export const addHomeOwner = async (data) => {
-    return await fetch(`http://localhost:5000/users/add/home-owner`, {
+    return await fetch(`${process.env.REACT_APP_MONGO_DB_URI}/users/add/home-owner`, {
         method: 'POST',
         body: JSON.stringify({
             uid: data.uid,

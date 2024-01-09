@@ -1,5 +1,5 @@
 export const updateNote = async (uid, sheet, type, item, itemIndex, editIndex) => {
-    return await fetch(`http://localhost:5000/users/update/note`, {
+    return await fetch(`${process.env.REACT_APP_MONGO_DB_URI}/users/update/note`, {
         method: 'POST',
         body: JSON.stringify({
           uid: uid,

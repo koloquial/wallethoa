@@ -1,5 +1,5 @@
 export const addDeposit = async ( uid, sheet, postDate, type, note, amount) => {
-    return await fetch(`http://localhost:5000/users/add/deposit`, {
+    return await fetch(`${process.env.REACT_APP_MONGO_DB_URI}/users/add/deposit`, {
         method: 'POST',
         body: JSON.stringify({
             uid: uid,

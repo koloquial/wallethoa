@@ -1,5 +1,5 @@
 export const addHOA = async ( uid, name) => {
-    return await fetch(`http://localhost:5000/users/update/hoa-name`, {
+    return await fetch(`${process.env.REACT_APP_MONGO_DB_URI}/users/update/hoa-name`, {
         method: 'POST',
         body: JSON.stringify({
             uid: uid,

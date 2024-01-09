@@ -1,5 +1,5 @@
 export const updateIncomeType = async ( uid, type, index ) => {
-    return await fetch(`http://localhost:5000/users/update/income-type`, {
+    return await fetch(`${process.env.REACT_APP_MONGO_DB_URI}/users/update/income-type`, {
         method: 'POST',
         body: JSON.stringify({
             uid: uid,

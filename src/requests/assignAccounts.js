@@ -6,7 +6,7 @@ export const assignAccounts = async (currentUser) => {
         return await getAccount(currentUser.uid)
         .then(json => {
             if(!Object.keys(json).length){
-                addAccount(currentUser.uid, currentUser.email)
+                return addAccount(currentUser.uid, currentUser.email)
                 .then(json => json)
             }else{
                 return json;

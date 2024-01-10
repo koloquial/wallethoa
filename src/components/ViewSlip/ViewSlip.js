@@ -50,17 +50,19 @@ const ViewSlip = ({ view, itemIndex, setView, setShowModal, slip }) => {
         }
     }
 
+    const setStates = (json) => {
+        setAccount(json);
+        getActive(json, active, setActive);
+        let act = returnActive(json, active);
+        setView(act[slip][itemIndex])
+    }
+
     const handleUpdateNote = (e) => {
         e.preventDefault();
         let copy = {...view.notes[editIndex]}
         copy.content = updatedNote;
         updateNote(account.uid, active, slip, copy, itemIndex, editIndex)
-        .then(json => {
-            setAccount(json);
-            getActive(json, active, setActive);
-            let act = returnActive(json, active);
-            setView(act[slip][itemIndex])
-        })
+        .then(json => setStates(json))
         .then(() => clearForm('Updated note.'))
     }
 
@@ -73,33 +75,19 @@ const ViewSlip = ({ view, itemIndex, setView, setShowModal, slip }) => {
         }
         copy.type = type;
         updateSlip(account.uid, active, slip, copy, itemIndex)
-        .then(json => {
-            setAccount(json);
-            getActive(json, active, setActive);
-            let act = returnActive(json, active);
-            setView(act[slip][itemIndex])
-        })
+        .then(json => setStates(json))
         .then(() => clearForm('Updated slip.'))
     }
 
     const handleDeleteSlip = () => {
         deleteSlip(account.uid, active, slip, itemIndex)
-        .then(json => {
-            setAccount(json);
-            getActive(json, active, setActive);
-            setShowModal(false);
-        })
+        .then(json => setStates(json))
         .then(() => clearForm('Updated slip.'))
     }
 
     const handleDeleteNote = () => {
         deleteNote(account.uid, active, slip, itemIndex, editIndex)
-        .then(json => {
-            setAccount(json);
-            getActive(json, active, setActive);
-            let act = returnActive(json, active);
-            setView(act[slip][itemIndex])
-        })
+        .then(json => setStates(json))
         .then(() => clearForm('Deleted note.'))
     }
 
@@ -107,15 +95,7 @@ const ViewSlip = ({ view, itemIndex, setView, setShowModal, slip }) => {
         e.preventDefault();
         let copy = {date: new Date(), content: updatedNote};
         addNote(account.uid, active, slip, itemIndex, copy)
-        .then(json => {
-            console.log('JSON', json)
-            setAccount(json);
-            getActive(json, active, setActive);
-            let act = returnActive(json, active);
-            console.log('ACT', act)
-            setView(act[slip][itemIndex]);
-            setUpdatedNote();
-        })
+        .then(json => setStates(json))
         .then(() => clearForm('Note added.'))
     }
 

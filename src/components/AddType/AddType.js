@@ -62,7 +62,7 @@ const AddType = ({ type }) => {
                 .then(() => clearForm('Type added.'));
             }
 
-            if(type === 'expenseTypes'){
+            if(type === 'expensesTypes'){
                 addExpenseType(account.uid, updatedName)
                 .then(json => {
                     setAccount(json);
@@ -71,7 +71,7 @@ const AddType = ({ type }) => {
                 .then(() => clearForm('Type added.'));
             }
 
-            if(type === 'expensePayees'){
+            if(type === 'expensesPayees'){
                 addExpensePayee(account.uid, updatedName)
                 .then(json => {
                     setAccount(json);
@@ -96,7 +96,7 @@ const AddType = ({ type }) => {
                 .then(() => clearForm('Type name updated.')) 
             }
 
-            if(type === 'expenseTypes'){
+            if(type === 'expensesTypes'){
                 updateExpenseType(account.uid, updatedName, editIndex)
                 .then(json => {
                     setAccount(json);
@@ -105,7 +105,7 @@ const AddType = ({ type }) => {
                 .then(() => clearForm('Type name updated.')) 
             }
 
-            if(type === 'expensePayees'){
+            if(type === 'expensesPayees'){
                 updateExpensePayee(account.uid, updatedName, editIndex)
                 .then(json => {
                     setAccount(json);
@@ -130,7 +130,7 @@ const AddType = ({ type }) => {
                 .then(() => clearForm('Type deleted.'))
             }
 
-            if(type === 'expenseTypes'){
+            if(type === 'expensesTypes'){
                 deleteExpenseType(account.uid, editIndex)
                 .then(json => {
                     setAccount(json);
@@ -139,7 +139,7 @@ const AddType = ({ type }) => {
                 .then(() => clearForm('Type deleted.'))
             }
 
-            if(type === 'expensePayees'){
+            if(type === 'expensesPayees'){
                 deleteExpensePayee(account.uid, editIndex)
                 .then(json => {
                     setAccount(json);
@@ -171,16 +171,16 @@ const AddType = ({ type }) => {
                         </Form>
                     <br />
 
-                    <p>{type === 'expensePayees' ? 'Payees:' : 'Types:'}</p>
+                    <p>{type === 'expensesPayees' ? 'Payees:' : 'Types:'}</p>
                     <table>
                         <thead>
                             <tr>
-                                <th>{type === 'expensePayees' ? 'Payee' : 'Type'}</th>
+                                <th>{type === 'expensesPayees' ? 'Payee' : 'Type'}</th>
                                 <th>Edit</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {account[type].map((type, index) => {
+                            {account[type] && account[type].map((type, index) => {
                                 return (
                                     <tr key={`${type}-${index}-list-item`}>
                                         <td>{type}</td>

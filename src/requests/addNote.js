@@ -1,10 +1,11 @@
-export const addNote = async (uid, sheet, type, item) => {
+export const addNote = async (uid, sheet, type, itemIndex, item) => {
     return await fetch(`${process.env.REACT_APP_MONGO_DB_URI}/users/add/note`, {
         method: 'POST',
         body: JSON.stringify({
           uid: uid,
           sheet: sheet,
           type: type,
+          itemIndex: itemIndex,
           item: item,
         }),
         headers: {

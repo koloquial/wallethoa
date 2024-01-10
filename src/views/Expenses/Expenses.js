@@ -1,32 +1,30 @@
 //state
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { useAccount } from '../../contexts/AccountContext';
 
 //style
-import { Card, Container,} from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 //components
 import Loading from '../../components/Loading';
 import Navigation from '../../components/Navigation';
 import ActiveSheet from '../../components/ActiveSheet';
+import Overview from '../../components/Overview';
+import AddSlip from '../../components/AddSlip';
 
 //requests
 import { assignAccounts } from '../../requests/assignAccounts';
-import Overview from '../../components/Overview';
 
 //functions
-import getExpenseTotal from '../../functions/getExpenseTotal';
-import AddExpense from '../../components/AddExpense';
-import ExpensesList from '../../components/ExpensesList';
+import { getGraphData } from '../../functions/getGraphData';
 import ListSlips from '../../components/ListSlips';
 
 const Expenses = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    const { currentUser, logout } = useAuth();
+    const { currentUser } = useAuth();
     const { account, setAccount, active, setActive } = useAccount();
 
     useEffect(() => {
@@ -45,19 +43,11 @@ const Expenses = () => {
                     <Navigation />
                     {active ? <ActiveSheet /> : <></>}
                     <Container>
-                        <Overview data={{
-                            title: "Expense Overview",
-                            content: [
-                                {
-                                    label: 'Expenses Paid', 
-                                    value: `$${getExpenseTotal(active).toFixed(2)}`
-                                },
-                            ],
-                            graph: [
-                                {label: 'Expense', data: getExpenseTotal(active).toFixed(2)},
-                            ]
-                        }} />
-                        <AddExpense />
+                        <Overview colors={true} data={getGraphData({
+                            title: "Expenses Overview",
+                            array: active.expenses,
+                            })} />
+                        <AddSlip slip={'expenses'} />
                         <ListSlips type={'expenses'} />
                     </Container>
                 </>

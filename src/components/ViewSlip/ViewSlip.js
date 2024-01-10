@@ -1,5 +1,5 @@
 //state
-import { useRef, useState } from 'react'; 
+import { useRef, useEffect, useState } from 'react'; 
 
 //style
 import { Row, Col, Button, Form, Select, Alert } from 'react-bootstrap'
@@ -18,19 +18,20 @@ import { updateSlip } from '../../requests/updateSlip';
 
 //components
 import SelectDate from '../SelectDate';
+import { Action } from '@remix-run/router';
 
-const ViewSlip = ({ view, itemIndex, setView, setShowModal }) => {
+const ViewSlip = ({ view, itemIndex, setView, setShowModal, slip }) => {
     //global state
     const { account, setAccount, active, setActive } = useAccount();
 
     //input values
-    const [datePick, setDatePick] = useState(new Date(view.postDate));
+    const [datePick, setDatePick] = useState(new Date(view ? view.postDate : ''));
     const [editIndex, setEditIndex] = useState();
     const [updatedNote, setUpdatedNote] = useState('');
     const [alertMsg, setAlertMsg] = useState();
     const [showAlert, setShowAlert] = useState();
-    const [type, setType] = useState(view.type);
-    const [amount, setAmount] = useState();
+    const [type, setType] = useState(view ? view.type : '');
+    const [amount, setAmount] = useState(view ? view.amount : 0);
  
     //view changes
     const [edit, setEdit] = useState();
@@ -49,20 +50,21 @@ const ViewSlip = ({ view, itemIndex, setView, setShowModal }) => {
         }
     }
 
+    useEffect(() => {
+        console.log('pause');
+        debugger;
+    }, [edit])
+
     const handleUpdateNote = (e) => {
         e.preventDefault();
         let copy = {...view.notes[editIndex]}
-
-        //update note content
         copy.content = updatedNote;
-
-        //update note on server
-        updateNote(account.uid, active, 'income', copy, itemIndex, editIndex)
+        updateNote(account.uid, active, slip, copy, itemIndex, editIndex)
         .then(json => {
             setAccount(json);
             getActive(json, active, setActive);
             let act = returnActive(json, active);
-            setView(act.income[itemIndex])
+            setView(act[slip][itemIndex])
         })
         .then(() => clearForm('Updated note.'))
     }
@@ -71,20 +73,22 @@ const ViewSlip = ({ view, itemIndex, setView, setShowModal }) => {
         e.preventDefault();
         let copy = {...view};
         copy.amount = amount;
-        copy.postDate = datePick;
+        if(copy.postDate !== datePick){
+            copy.postDate = datePick;
+        }
         copy.type = type;
-        updateSlip(account.uid, active, 'income', copy, itemIndex)
+        updateSlip(account.uid, active, slip, copy, itemIndex)
         .then(json => {
             setAccount(json);
             getActive(json, active, setActive);
             let act = returnActive(json, active);
-            setView(act.income[itemIndex])
+            setView(act[slip][itemIndex])
         })
         .then(() => clearForm('Updated slip.'))
     }
 
     const handleDeleteSlip = () => {
-        deleteSlip(account.uid, active, 'income', itemIndex)
+        deleteSlip(account.uid, active, slip, itemIndex)
         .then(json => {
             setAccount(json);
             getActive(json, active, setActive);
@@ -94,26 +98,27 @@ const ViewSlip = ({ view, itemIndex, setView, setShowModal }) => {
     }
 
     const handleDeleteNote = () => {
-        deleteNote(account.uid, active, 'income', itemIndex, editIndex)
+        deleteNote(account.uid, active, slip, itemIndex, editIndex)
         .then(json => {
             setAccount(json);
             getActive(json, active, setActive);
             let act = returnActive(json, active);
-            setView(act.income[itemIndex])
+            setView(act[slip][itemIndex])
         })
         .then(() => clearForm('Deleted note.'))
     }
 
     const handleAddNote = (e) => {
         e.preventDefault();
-        let copy = {...view};
-        copy.notes.push({date: new Date(), content: updatedNote});
-        addNote(account.uid, active, 'income', copy)
+        let copy = {date: new Date(), content: updatedNote};
+        addNote(account.uid, active, slip, itemIndex, copy)
         .then(json => {
+            console.log('JSON', json)
             setAccount(json);
             getActive(json, active, setActive);
             let act = returnActive(json, active);
-            setView(act.income[itemIndex]);
+            console.log('ACT', act)
+            setView(act[slip][itemIndex]);
             setUpdatedNote();
         })
         .then(() => clearForm('Note added.'))
@@ -151,7 +156,7 @@ const ViewSlip = ({ view, itemIndex, setView, setShowModal }) => {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{view.postDate.split('T')[0]}</td>
+                                    <td>{view.postDate.split('T')[0]}<br />{view.postDate.split('T')[1]}</td>
                                     <td>{view.type}</td>
                                     <td>${parseFloat(view.amount).toFixed(2)}</td>
                                     <td>
@@ -178,7 +183,7 @@ const ViewSlip = ({ view, itemIndex, setView, setShowModal }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {view.notes.map((note, index) => {
+                                {view.notes && view.notes.map((note, index) => {
                                     return (
                                         <tr key={`note-${index}`}>
                                             <td>{note.date.split('T')[0]}</td>
@@ -199,22 +204,38 @@ const ViewSlip = ({ view, itemIndex, setView, setShowModal }) => {
                     <>
                         {edit === 'this' ? 
                             <>
+                            {console.log('account', account)}
+                            {console.log('slip', slip)}
                                 <Form onSubmit={handleUpdateSlip}>
-
                                     <SelectDate datePick={datePick} setDatePick={setDatePick}/>
-
                                     <Form.Group>
                                         <Form.Label>Update Type:</Form.Label>
                                         <Form.Select onChange={(e) => setType(e.target.value)}>
-                                                {account.incomeTypes.map((type, index) => {
+                                                {account[`${slip}Types`] && account[`${slip}Types`].map((type, index) => {
                                                     if(type === view.type){
-                                                        return <option key={`${type}-${index}-deposit-type`} selected>{type}</option>
+                                                        return <option key={`${type}-${index}-${slip}-type`} selected>{type}</option>
                                                     }else{
-                                                        return <option key={`${type}-${index}-deposit-type`}>{type}</option>
+                                                        return <option key={`${type}-${index}-${slip}-type`}>{type}</option>
                                                     }
                                                 })}
                                         </Form.Select>
                                     </Form.Group>
+                                
+                                    {slip === 'expenses' ? 
+                                    <>
+                                        <Form.Group>
+                                            <Form.Label>Update Payee:</Form.Label>
+                                            <Form.Select onChange={(e) => setType(e.target.value)}>
+                                                    {account[`${slip}Payees`] && account[slip + 'Payees'].map((type, index) => {
+                                                        if(type === view.type){
+                                                            return <option key={`${type}-${index}-${slip}-type`} selected>{type}</option>
+                                                        }else{
+                                                            return <option key={`${type}-${index}-${slip}-type`}>{type}</option>
+                                                        }
+                                                    })}
+                                            </Form.Select>
+                                        </Form.Group>
+                                    </> : <></>}
                                 
                                     <br />
                                     <Form.Group>
@@ -253,6 +274,7 @@ const ViewSlip = ({ view, itemIndex, setView, setShowModal }) => {
                                         <p>Are you sure you want to delete:</p>
                                         <p><b>Post Date: </b>{view.postDate}</p>
                                         <p><b>Type: </b>{view.type}</p>
+                                        {slip === 'expenses' ? <p><b>Type: </b>{view.payee}</p> : <></>}
                                         <p><b>Amount:</b> ${Number(view.amount).toFixed(2)}</p>
                                         <Row>
                                             <Col style={{textAlign: 'center'}}>

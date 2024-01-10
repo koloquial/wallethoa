@@ -11,7 +11,7 @@ import Loading from '../../components/Loading';
 import Navigation from '../../components/Navigation';
 import ActiveSheet from '../../components/ActiveSheet';
 import Overview from '../../components/Overview';
-import AddDeposit from '../../components/AddDeposit';
+import AddSlip from '../../components/AddSlip';
 
 //requests
 import { assignAccounts } from '../../requests/assignAccounts';
@@ -24,7 +24,7 @@ const Income = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    const { currentUser, logout } = useAuth();
+    const { currentUser } = useAuth();
     const { account, setAccount, active, setActive } = useAccount();
 
     useEffect(() => {
@@ -47,7 +47,7 @@ const Income = () => {
                             title: "Income Overview",
                             array: active.income,
                             })} />
-                        <AddDeposit />
+                        <AddSlip slip={'income'} />
                         <ListSlips type={'income'} />
                     </Container>
                 </>

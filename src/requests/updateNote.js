@@ -6,8 +6,8 @@ export const updateNote = async (uid, sheet, type, item, itemIndex, editIndex) =
           sheet: sheet,
           type: type,
           item: item,
-          depositIndex: itemIndex,
-          noteIndex: editIndex
+          itemIndex: itemIndex,
+          editIndex: editIndex
         }),
         headers: {
           "Content-type": "application/json; charset=UTF-8"

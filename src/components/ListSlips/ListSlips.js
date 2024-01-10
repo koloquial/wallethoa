@@ -22,7 +22,8 @@ const ListSlips = ({ type }) => {
                 showModal={showModal} 
                 setShowModal={setShowModal}
                 header={`Edit Slip`}
-                body={<ViewSlip 
+                body={<ViewSlip
+                    slip={type} 
                     view={view}
                     setView={setView}
                     setShowModal={setShowModal} 
@@ -31,7 +32,7 @@ const ListSlips = ({ type }) => {
             />
 
             <Card.Header>
-                <p>{type.charAt(0).toUpperCase() + type.slice(1)} Slips</p>
+                <p>{type === 'income' ? 'Income' : 'Expense'} Slips</p>
             </Card.Header>
             <Card.Body>
                 <table>

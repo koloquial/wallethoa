@@ -3,7 +3,7 @@ import { useState, useRef } from 'react';
 import { useAccount } from '../../contexts/AccountContext';
 
 //style
-import { Form, Button, Alert } from 'react-bootstrap'
+import { Form, Button, Alert, Card, Row, Col } from 'react-bootstrap'
 
 //functions
 import getActive from '../../functions/getActive';
@@ -16,7 +16,6 @@ import { addExpense } from '../../requests/addExpense';
 import Popup from '../Popup';
 import SelectDate from '../SelectDate';
 import AddType from '../AddType';
-
 
 const AddSlip = ({ slip }) => {
     //inputs
@@ -46,13 +45,18 @@ const AddSlip = ({ slip }) => {
     const handleSubmit = (e) =>{
         e.preventDefault();
 
-        if(slip === 'deposit'){
+        let note;
+        if(noteRef.current.value.length){
+            note = {date: new Date(), content: noteRef.current.value}
+        }
+
+        if(slip === 'income'){
             addDeposit(
                 account.uid, 
                 active, 
                 datePick, 
                 type, 
-                {date: new Date(), content: noteRef.current.value}, 
+                note,
                 amountRef.current.value
             )
             .then(json => {
@@ -62,14 +66,14 @@ const AddSlip = ({ slip }) => {
             .then(() => clearForm('Deposit added.'));
         }
 
-        if(slip === 'expense'){
+        if(slip === 'expenses'){
             addExpense(
                 account.uid, 
                 active, 
                 datePick, 
                 type, 
                 payee, 
-                noteRef.current.value, 
+                note,
                 amountRef.current.value
             )
             .then(json => {
@@ -83,8 +87,8 @@ const AddSlip = ({ slip }) => {
     const getHeader = () => {
         switch(popupData){
             case 'incomeTypes': return 'Create/Edit Deposit Type';
-            case 'expenseTypes': return 'Create/Edit Expense Type';
-            case 'expensePayees': return 'Create/Edit Payee Name';
+            case 'expensesTypes': return 'Create/Edit Expense Type';
+            case 'expensesPayees': return 'Create/Edit Payee Name';
             default: return 'Edit';
         }
     }
@@ -96,54 +100,48 @@ const AddSlip = ({ slip }) => {
                 setShowModal={setShowModal}
                 header={getHeader()}
                 body={<AddType type={popupData} />}
-            /> 
+            />
+
+             <Card>
+                <Card.Header>
+                    <Row>
+                        <Col><p>Add {slip === 'income' ? 'Income' : 'Expense'}</p></Col>
+                    </Row>
+                </Card.Header>
+                <Card.Body>     
 
             <Form onSubmit={handleSubmit}>
                 {showAlert ? <Alert variant='success'>{alertMsg}</Alert> : <></>}
 
                 <SelectDate datePick={datePick} setDatePick={setDatePick}/>
 
-                {slip === 'deposit' ? 
-                    <Form.Group>
-                        <Form.Label>Select Type</Form.Label>
-                        <Form.Select onChange={(e) => setType(e.target.value)}>
-                            <option key={'default-val'}>Select Type</option>
-                                {account.incomeTypes.map((type, index) => {
-                                    return <option key={`${type}-${index}-deposit-type`}>{type}</option>
-                                })}
-                        </Form.Select>
-                        <Button onClick={() => {
-                            setShowModal(true);
-                            setPopupData('incomeTypes');
-                        }}>Create/Edit Type</Button>
-                    </Form.Group>
-                    :
-                    <Form.Group>
-                        <Form.Label>Select Type</Form.Label>
-                        <Form.Select onChange={(e) => setType(e.target.value)}>
-                            {account.expenseTypes.map((type, index) => {
-                                return <option key={`${type}-${index}-expense-type`}>{type}</option>
+                <Form.Group>
+                    <Form.Label>Select Type</Form.Label>
+                    <Form.Select onChange={(e) => setType(e.target.value)}>
+                        <option key={'default-val'}>Select Type</option>
+                            {account[`${slip}Types`] && account[`${slip}Types`] && account[`${slip}Types`].map((type, index) => {
+                                return <option key={`${type}-${index}-${slip}-type`}>{type}</option>
                             })}
-                        </Form.Select>
-                        <Button onClick={() => {
-                            setShowModal(true);
-                            setPopupData('expenseTypes');
-                        }}>Create/Edit Type</Button>
-                    </Form.Group>
-                }
+                    </Form.Select>
+                    <Button onClick={() => {
+                        setShowModal(true);
+                        setPopupData(`${slip}Types`);
+                    }}>Create/Edit Type</Button>
+                </Form.Group>
 
-                {slip === 'expense' ? 
+
+                {slip === 'expenses' ? 
                     <Form.Group>
                         <Form.Label>Select Payee</Form.Label>
-                        <Form.Select onChange={(e) => setType(e.target.value)}>
-                            <option key={'default-val'}>Select Type</option>
-                                {account.expensePayees.map((type, index) => {
-                                    return <option key={`${type}-${index}-expens-payee`}>{type}</option>
+                        <Form.Select onChange={(e) => setPayee(e.target.value)}>
+                            <option key={'default-val'}>Select Payee</option>
+                                {account.expensesPayees && account.expensesPayees.map((type, index) => {
+                                    return <option key={`${type}-${index}-expense-payee`}>{type}</option>
                                 })}
                         </Form.Select>
                         <Button onClick={() => {
                             setShowModal(true);
-                            setPopupData('expensePayees');
+                            setPopupData('expensesPayees');
                             }}>Create/Edit Payee</Button>
                     </Form.Group> : <></>
                 }
@@ -160,6 +158,8 @@ const AddSlip = ({ slip }) => {
 
                 <Button type='submit'>Submit</Button>
             </Form>
+            </Card.Body>
+            </Card>
         </>
     )
 }

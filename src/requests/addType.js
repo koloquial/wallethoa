@@ -1,9 +1,10 @@
-export const addIncomeType = async ( uid, type) => {
-    return await fetch(`${process.env.REACT_APP_MONGO_DB_URI}/users/add/income-type`, {
+export const addType = async ( uid, item, type) => {
+    return await fetch(`${process.env.REACT_APP_MONGO_DB_URI}/users/add/type`, {
             method: 'POST',
             body: JSON.stringify({
-              uid:uid,
-              type: type
+              uid: uid,
+              item: item,
+              type: type,
             }),
             headers: {
               "Content-type": "application/json; charset=UTF-8"

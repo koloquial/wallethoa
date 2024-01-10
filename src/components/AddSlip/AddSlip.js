@@ -9,8 +9,7 @@ import { Form, Button, Alert, Card, Row, Col } from 'react-bootstrap'
 import getActive from '../../functions/getActive';
 
 //requests
-import { addDeposit } from '../../requests/addDeposit';
-import { addExpense } from '../../requests/addExpense';
+import { addSlip } from '../../requests/addSlip';
 
 //components
 import Popup from '../Popup';
@@ -50,38 +49,20 @@ const AddSlip = ({ slip }) => {
             note = {date: new Date(), content: noteRef.current.value}
         }
 
-        if(slip === 'income'){
-            addDeposit(
-                account.uid, 
-                active, 
-                datePick, 
-                type, 
-                note,
-                amountRef.current.value
-            )
+        addSlip(
+            account.uid, 
+            active, 
+            slip,
+            datePick, 
+            type, 
+            payee, 
+            note,
+            amountRef.current.value)
             .then(json => {
                 setAccount(json);
                 getActive(json, active, setActive);
             })
-            .then(() => clearForm('Deposit added.'));
-        }
-
-        if(slip === 'expenses'){
-            addExpense(
-                account.uid, 
-                active, 
-                datePick, 
-                type, 
-                payee, 
-                note,
-                amountRef.current.value
-            )
-            .then(json => {
-                setAccount(json);
-                getActive(json, active, setActive);
-            })
-            .then(() => clearForm('Expense added.'))
-        }
+            .then(() => clearForm('Slip added.'))
     }
 
     const getHeader = () => {

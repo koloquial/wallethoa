@@ -6,19 +6,11 @@ import { useAccount } from '../../contexts/AccountContext';
 import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
 
 //requests
-import { addIncomeType } from '../../requests/addIncomeType';
-import { updateIncomeType } from '../../requests/updateIncomeType';
-import { deleteIncomeType } from '../../requests/deleteIncomeType';
+import { addType } from '../../requests/addType';
+import { updateType } from '../../requests/updateType';
+import { deleteType} from '../../requests/deleteType';
 
-import { addExpenseType } from '../../requests/addExpenseType';
-import { updateExpenseType } from '../../requests/updateExpenseType';
-import { deleteExpenseType } from '../../requests/deleteExpenseType';
-
-import { addExpensePayee } from '../../requests/addExpensePayee';
-import { updateExpensePayee } from '../../requests/updateExpensePayee';
-import { deleteExpensePayee } from '../../requests/deleteExpensePayee';
-
-
+//functions
 import getActive from '../../functions/getActive';
 
 const AddType = ({ type }) => {
@@ -48,105 +40,39 @@ const AddType = ({ type }) => {
          setUpdatedName('');
     }
 
-    const handleNewType = (e) => {
+    const handleAddType = (e) => {
         e.preventDefault();
-        //check if a new name was entered
         if(updatedName){
-            //check slip type
-            if(type === 'incomeTypes'){
-                addIncomeType(account.uid, updatedName)
-                .then(json => {
-                    setAccount(json);
-                    getActive(json, active, setActive);
-                })
-                .then(() => clearForm('Type added.'));
-            }
-
-            if(type === 'expensesTypes'){
-                addExpenseType(account.uid, updatedName)
-                .then(json => {
-                    setAccount(json);
-                    getActive(json, active, setActive);
-                })
-                .then(() => clearForm('Type added.'));
-            }
-
-            if(type === 'expensesPayees'){
-                addExpensePayee(account.uid, updatedName)
-                .then(json => {
-                    setAccount(json);
-                    getActive(json, active, setActive);
-                })
-                .then(() => clearForm('Type added.'));
-            }
+            addType(account.uid, updatedName, type)
+            .then(json => {
+                setAccount(json);
+                getActive(json, active, setActive);
+            })
+            .then(() => clearForm('Type added.'));   
         }
     }
 
     const handleUpdateType = (e) => {
         e.preventDefault();
-        //check if a new name was entered
         if(updatedName){
-            //check slip type
-            if(type === 'incomeTypes'){
-                updateIncomeType(account.uid, updatedName, editIndex)
-                .then(json => {
-                    setAccount(json);
-                    getActive(json, active, setActive);
-                })
-                .then(() => clearForm('Type name updated.')) 
-            }
-
-            if(type === 'expensesTypes'){
-                updateExpenseType(account.uid, updatedName, editIndex)
-                .then(json => {
-                    setAccount(json);
-                    getActive(json, active, setActive);
-                })
-                .then(() => clearForm('Type name updated.')) 
-            }
-
-            if(type === 'expensesPayees'){
-                updateExpensePayee(account.uid, updatedName, editIndex)
-                .then(json => {
-                    setAccount(json);
-                    getActive(json, active, setActive);
-                })
-                .then(() => clearForm('Type name updated.')) 
-            }
+            updateType(account.uid, updatedName, editIndex, type)
+            .then(json => {
+                setAccount(json);
+                getActive(json, active, setActive);
+            })
+            .then(() => clearForm('Type name updated.'))    
         }
     }
 
     const handleDeleteType = (e) => {
         e.preventDefault();
-        //check if a new name was entered
         if(updatedName){
-            //check slip type
-            if(type === 'incomeTypes'){
-                deleteIncomeType(account.uid, editIndex)
-                .then(json => {
-                    setAccount(json);
-                    getActive(json, active, setActive);
-                })
-                .then(() => clearForm('Type deleted.'))
-            }
-
-            if(type === 'expensesTypes'){
-                deleteExpenseType(account.uid, editIndex)
-                .then(json => {
-                    setAccount(json);
-                    getActive(json, active, setActive);
-                })
-                .then(() => clearForm('Type deleted.'))
-            }
-
-            if(type === 'expensesPayees'){
-                deleteExpensePayee(account.uid, editIndex)
-                .then(json => {
-                    setAccount(json);
-                    getActive(json, active, setActive);
-                })
-                .then(() => clearForm('Type deleted.'))
-            }
+            deleteType(account.uid, editIndex, type)
+            .then(json => {
+                setAccount(json);
+                getActive(json, active, setActive);
+            })
+            .then(() => clearForm('Type deleted.'))
         }
     }
 
@@ -154,7 +80,7 @@ const AddType = ({ type }) => {
         <>
             {!edit ?
                 <>
-                    <Form onSubmit={handleNewType}>
+                    <Form onSubmit={handleAddType}>
                         {showAlert ? <Alert variant='success'>{alertMsg}</Alert> : <></>}
                         
                         <Form.Group id='new-type-name'>

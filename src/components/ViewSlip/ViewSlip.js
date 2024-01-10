@@ -1,5 +1,5 @@
 //state
-import { useRef, useEffect, useState } from 'react'; 
+import { useEffect, useState } from 'react'; 
 
 //style
 import { Row, Col, Button, Form, Select, Alert } from 'react-bootstrap'
@@ -18,7 +18,7 @@ import { updateSlip } from '../../requests/updateSlip';
 
 //components
 import SelectDate from '../SelectDate';
-import { Action } from '@remix-run/router';
+
 
 const ViewSlip = ({ view, itemIndex, setView, setShowModal, slip }) => {
     //global state
@@ -49,11 +49,6 @@ const ViewSlip = ({ view, itemIndex, setView, setShowModal, slip }) => {
             setTimeout(() => setShowAlert(false), 2500);
         }
     }
-
-    useEffect(() => {
-        console.log('pause');
-        debugger;
-    }, [edit])
 
     const handleUpdateNote = (e) => {
         e.preventDefault();

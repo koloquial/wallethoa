@@ -1,10 +1,16 @@
 # Wallet HOA
 
-- reactjs
+### Technology
+
+- ReactJS
+- Firebase
+- Google Fonts
+- Chart.js
 - react-router
-- firebase
-- google fonts
 - react-bootstrap
 - react-icons
 - react-datepicker
-- chart.js
+
+### Server
+
+https://github.com/koloquial/wallethoa-server
